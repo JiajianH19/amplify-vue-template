@@ -1,13 +1,30 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { get } from 'aws-amplify/api';
+// Assuming '@/assets/main.css' is imported globally in main.ts or via a base <style> tag
 
-const searchType = ref('UEN');
+// Define types for your API responses for better type safety
+interface BizFinderResponse {
+  error?: string;
+  message?: string;
+  data: {
+    // Add specific data structure here
+    uen?: string;
+    name?: string;
+    ssic?: string;
+    // ... other fields
+  };
+}
+
+const searchType = ref<'UEN' | 'NAME' | 'SSIC'>('UEN');
 const searchText = ref('');
-const searchResults = ref(null);
+// Type searchResults to accept BizFinderResponse or null
+const searchResults = ref<BizFinderResponse | null>(null);
 const errorMessage = ref('');
 const isLoading = ref(false);
-const apiEndpoint = 'https://3o8woigknc.execute-api.ap-southeast-1.amazonaws.com/dev';
+
+// REMOVE apiEndpoint variable from here, it's globally configured in main.ts
+// const apiEndpoint = 'https://3o8woigknc.execute-api.ap-southeast-1.amazonaws.com/dev';
 
 async function search() {
   errorMessage.value = '';
@@ -28,28 +45,36 @@ async function search() {
     };
 
     const restOperation = get({
-      apiName: "BizFinderAPI_placeholder",
+      apiName: "BizFinderAPI", // Use the apiName configured in main.ts
       path: path,
       options: {
         queryParams: queryParams,
-        customEndpoint: apiEndpoint,
+        // REMOVE customEndpoint from here. It's handled by apiName.
+        // customEndpoint: apiEndpoint, // This line caused TS2353
       }
     });
     
     const { body } = await restOperation.response;
-    const responseJson = await body.json();
+    // Explicitly cast the result to your expected type
+    const responseJson: BizFinderResponse = await body.json();
 
     console.log('API Response Body:', responseJson);
 
-    if (responseJson.error) {
+    // Now responseJson is typed, so TypeScript knows it might have an 'error' property
+    if (responseJson && responseJson.error) { // Added null check for safety (TS18047)
       errorMessage.value = responseJson.error;
     } else {
-      searchResults.value = responseJson;
+      searchResults.value = responseJson; // Now assignable because of <BizFinderResponse | null> type
     }
 
-  } catch (error) {
+  } catch (error: unknown) { // Explicitly type error as unknown
     console.error('An error occurred during the API call:', error);
-    errorMessage.value = error.message || 'Failed to fetch data. Check browser console.';
+    // Type narrow 'error' before accessing its properties (TS18046)
+    if (error instanceof Error) {
+      errorMessage.value = error.message;
+    } else {
+      errorMessage.value = 'Failed to fetch data. Check browser console.';
+    }
   } finally {
     isLoading.value = false;
   }
@@ -57,62 +82,162 @@ async function search() {
 </script>
 
 <template>
-    <div id="app-container">
-      <header class="app-header">
-        <span class="logo">BizFinder</span>
-      </header>
-  
-      <main class="main-content">
-        <div class="search-box">
-          <select v-model="searchType" class="dropdown">
-            <option value="UEN">UEN</option>
-            <option value="NAME">Name</option>
-            <option value="SSIC">SSIC Code</option>
-          </select>
-  
-          <input
-            type="text"
-            v-model="searchText"
-            @keyup.enter="search"
-            placeholder="Enter search term..."
-            class="text-input"
-          />
-  
-          <button @click="search" :disabled="isLoading" class="search-button">
-            {{ isLoading ? 'Searching...' : 'Search' }}
-          </button>
-        </div>
-  
-        <!-- Results Display Area -->
-        <div class="results-container">
-          <div v-if="isLoading" class="message">Loading...</div>
-          <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
-          <div v-if="searchResults">
-            <h3>Raw JSON Response:</h3>
-            <pre>{{ searchResults }}</pre>
+  <main>
+    <h1>My todos</h1> <!-- This looks like it's still from the Todos component, adjust if this is App.vue -->
+    <div>
+      <!-- Your existing template content for the search form and results -->
+      <div id="app-container">
+        <header class="app-header">
+          <span class="logo">BizFinder</span>
+        </header>
+
+        <main class="main-content">
+          <div class="search-box">
+            <select v-model="searchType" class="dropdown">
+              <option value="UEN">UEN</option>
+              <option value="NAME">Name</option>
+              <option value="SSIC">SSIC Code</option>
+            </select>
+
+            <input
+              type="text"
+              v-model="searchText"
+              @keyup.enter="search"
+              placeholder="Enter search term..."
+              class="text-input"
+            />
+
+            <button @click="search" :disabled="isLoading" class="search-button">
+              {{ isLoading ? 'Searching...' : 'Search' }}
+            </button>
           </div>
-        </div>
-      </main>
+
+          <!-- Results Display Area -->
+          <div class="results-container">
+            <div v-if="isLoading" class="message">Loading...</div>
+            <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
+            <div v-if="searchResults">
+              <h3>Raw JSON Response:</h3>
+              <pre>{{ JSON.stringify(searchResults, null, 2) }}</pre>
+            </div>
+          </div>
+        </main>
+      </div>
     </div>
+  </main>
 </template>
 
-  
+<!-- Add your styles if not using a global main.css -->
 <style>
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f6f8; }
-    #app-container { display: flex; flex-direction: column; min-height: 100vh; }
-    .app-header { background-color: #fff; padding: 10px 30px; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .logo { font-size: 1.5rem; font-weight: bold; color: #007bff; }
-    .main-content { flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .search-box { display: flex; align-items: center; gap: 10px; padding: 20px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-    .dropdown, .text-input { padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
-    .text-input { flex-grow: 1; }
-    .search-button { padding: 12px 20px; border: none; border-radius: 4px; background-color: #007bff; color: white; font-size: 1rem; cursor: pointer; transition: background-color 0.2s; }
-    .search-button:hover:not(:disabled) { background-color: #0056b3; }
-    .search-button:disabled { background-color: #cccccc; cursor: not-allowed; }
-    .results-container { margin-top: 30px; width: 100%; max-width: 600px; text-align: center; }
-    .message { font-size: 1.1rem; color: #555; }
-    .message.error { color: #dc3545; font-weight: bold; }
-    pre { background-color: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 5px; text-align: left; white-space: pre-wrap; word-wrap: break-word; }
+/* @import '@/assets/main.css'; /* Uncomment if specific to this component or not globally imported */
+
+/* Your existing styles (or link to global styles) */
+#app-container {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.app-header {
+  background-color: #42b983;
+  color: white;
+  padding: 15px 0;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.main-content {
+  max-width: 800px;
+  width: 90%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.dropdown, .text-input, .search-button {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+}
+
+.dropdown {
+  background-color: white;
+  cursor: pointer;
+}
+
+.text-input {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.search-button {
+  background-color: #42b983;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-button:hover:not(:disabled) {
+  background-color: #36a374;
+}
+
+.search-button:disabled {
+  background-color: #a0d9b4;
+  cursor: not-allowed;
+}
+
+.results-container {
+  text-align: left;
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.message {
+  padding: 10px;
+  background-color: #e0f7fa;
+  border-left: 5px solid #00bcd4;
+  margin-bottom: 10px;
+}
+
+.message.error {
+  background-color: #ffebee;
+  border-left: 5px solid #f44336;
+  color: #d32f2f;
+}
+
+pre {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
 </style>
-
-
