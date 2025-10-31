@@ -1,67 +1,59 @@
 <script setup lang="ts">
-  import { get } from 'aws-amplify/api';
-  import { Amplify } from 'aws-amplify';
-  
-  export default {
-    name: 'App',
-    data() {
-      return {
-        searchType: 'UEN',
-        searchText: '',
-        searchResults: null,
-        errorMessage: '',
-        isLoading: false,
-        apiEndpoint: 'https://3o8woigknc.execute-api.ap-southeast-1.amazonaws.com/dev'
-      };
-    },
-    methods: {
-      async search() {
-        this.errorMessage = '';
-        this.searchResults = null;
-        this.isLoading = true;
-  
-        if (!this.searchText.trim()) {
-          this.errorMessage = 'Please enter a search term.';
-          this.isLoading = false;
-          return;
-        }
-  
-        try {
-          const path = '/company';
-          const queryParams = {
-            type: this.searchType,
-            data: this.searchText.trim(),
-          };
-  
-          const restOperation = get({
-            apiName: "BizFinderAPI_placeholder",
-            path: path,
-            options: {
-              queryParams: queryParams,
-              customEndpoint: this.apiEndpoint,
-            }
-          });
-          
-          const { body } = await restOperation.response;
-          const responseJson = await body.json();
-  
-          console.log('API Response Body:', responseJson);
-  
-          if (responseJson.error) {
-            this.errorMessage = responseJson.error;
-          } else {
-            this.searchResults = responseJson;
-          }
-  
-        } catch (error) {
-          console.error('An error occurred during the API call:', error);
-          this.errorMessage = error.message || 'Failed to fetch data. Check browser console.';
-        } finally {
-          this.isLoading = false;
-        }
-      },
-    },
-  };
+import { ref } from 'vue';
+import { get } from 'aws-amplify/api';
+
+const searchType = ref('UEN');
+const searchText = ref('');
+const searchResults = ref(null);
+const errorMessage = ref('');
+const isLoading = ref(false);
+const apiEndpoint = 'https://3o8woigknc.execute-api.ap-southeast-1.amazonaws.com/dev';
+
+async function search() {
+  errorMessage.value = '';
+  searchResults.value = null;
+  isLoading.value = true;
+
+  if (!searchText.value.trim()) {
+    errorMessage.value = 'Please enter a search term.';
+    isLoading.value = false;
+    return;
+  }
+
+  try {
+    const path = '/company';
+    const queryParams = {
+      type: searchType.value,
+      data: searchText.value.trim(),
+    };
+
+    const restOperation = get({
+      apiName: "BizFinderAPI_placeholder",
+      path: path,
+      options: {
+        queryParams: queryParams,
+        customEndpoint: apiEndpoint,
+      }
+    });
+    
+    const { body } = await restOperation.response;
+    const responseJson = await body.json();
+
+    console.log('API Response Body:', responseJson);
+
+    if (responseJson.error) {
+      errorMessage.value = responseJson.error;
+    } else {
+      searchResults.value = responseJson;
+    }
+
+  } catch (error) {
+    console.error('An error occurred during the API call:', error);
+    errorMessage.value = error.message || 'Failed to fetch data. Check browser console.';
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 
 <template>
