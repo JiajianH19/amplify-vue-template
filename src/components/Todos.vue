@@ -55,16 +55,19 @@ async function search() {
     });
     
     const { body } = await restOperation.response;
-    // Explicitly cast the result to your expected type
-    const responseJson: BizFinderResponse = await body.json();
+    const rawResponse = await body.json();
+    // Type check and cast
+    if (rawResponse && typeof rawResponse === 'object') {
+      const responseJson = rawResponse as BizFinderResponse;
+      console.log('API Response Body:', responseJson);
 
-    console.log('API Response Body:', responseJson);
-
-    // Now responseJson is typed, so TypeScript knows it might have an 'error' property
-    if (responseJson && responseJson.error) { // Added null check for safety (TS18047)
-      errorMessage.value = responseJson.error;
+      if (responseJson.error) {
+        errorMessage.value = responseJson.error;
+      } else {
+        searchResults.value = responseJson;
+      }
     } else {
-      searchResults.value = responseJson; // Now assignable because of <BizFinderResponse | null> type
+      throw new Error('Invalid response format');
     }
 
   } catch (error: unknown) { // Explicitly type error as unknown

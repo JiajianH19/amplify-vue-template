@@ -10,10 +10,7 @@ Amplify.configure({
     REST: {
       BizFinderAPI: {
         endpoint: API_GATEWAY_URL,
-        region: 'ap-southeast-1',
-        custom_header: async () => {
-          return {}  // Add any custom headers if needed
-        }
+        region: 'ap-southeast-1'
       },
     },
   },
