@@ -1,20 +1,34 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { get } from 'aws-amplify/api';
-// Assuming '@/assets/main.css' is imported globally in main.ts or via a base <style> tag
 
-// Define types for your API responses for better type safety
+interface BusinessData {
+  DATA_TYPE: string;
+  UEN: string;
+  ENTITY_NAME: string;
+  ENTITY_TYPE_DESCRIPTION: string;
+  BUSINESS_CONSTITUTION_DESCRIPTION: string | null;
+  PRIMARY_SSIC_CODE: string;
+  ENTITY_STATUS_DESCRIPTION: string;
+  REGISTRATION_INCORPORATION_DATE: string;
+}
+
 interface BizFinderResponse {
   error?: string;
   message?: string;
-  data: {
-    // Add specific data structure here
-    uen?: string;
-    name?: string;
-    ssic?: string;
-    // ... other fields
-  };
+  data: BusinessData;
 }
+
+// Type guard function
+const isBizFinderResponse = (data: unknown): data is BusinessData => {
+  if (!data || typeof data !== 'object') return false;
+  const response = data as any;
+  return (
+    'UEN' in response &&
+    'ENTITY_NAME' in response &&
+    'DATA_TYPE' in response
+  );
+};
 
 const searchType = ref<'UEN' | 'NAME' | 'SSIC'>('UEN');
 const searchText = ref('');
@@ -56,16 +70,11 @@ async function search() {
     
     const { body } = await restOperation.response;
     const rawResponse = await body.json();
-    // Type check and cast
-    if (rawResponse && typeof rawResponse === 'object') {
-      const responseJson = rawResponse as BizFinderResponse;
-      console.log('API Response Body:', responseJson);
-
-      if (responseJson.error) {
-        errorMessage.value = responseJson.error;
-      } else {
-        searchResults.value = responseJson;
-      }
+ 
+    if (isBizFinderResponse(rawResponse)) {
+      searchResults.value = {
+        data: rawResponse
+      };
     } else {
       throw new Error('Invalid response format');
     }
