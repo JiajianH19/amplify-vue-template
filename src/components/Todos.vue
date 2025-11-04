@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-// MODIFICATION: Import the real 'get' function from AWS Amplify
 import { get } from 'aws-amplify/api';
 import dnbLogo from '@/assets/dnb-logo.svg';
 
-// --- Interfaces and Type Guards (from reference) ---
+// --- Interfaces and Type Guards ---
 interface BusinessData {
   DATA_TYPE: string;
   UEN: string;
@@ -16,7 +15,6 @@ interface BusinessData {
   REGISTRATION_INCORPORATION_DATE: string;
 }
 
-// MODIFICATION: Adjusted BizFinderResponse to match the structure in search()
 interface BizFinderResponse {
   data: BusinessData;
 }
@@ -37,17 +35,22 @@ const isLoading = ref(false);
 // --- State for Custom Dropdown ---
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
+
+// MODIFICATION FOR ERROR 2: Use `as const` for precise type inference.
 const dropdownOptions = [
   { value: 'UEN', label: 'UEN' },
   { value: 'NAME', label: 'Name' },
   { value: 'SSIC', label: 'SSIC' }
-];
+] as const;
 
 const toggleDropdown = () => isDropdownOpen.value = !isDropdownOpen.value;
-const selectOption = (option: { value: 'UEN' | 'NAME' | 'SSIC' }) => {
+
+// The function signature is now compatible thanks to `as const` above.
+const selectOption = (option: { value: 'UEN' | 'NAME' | 'SSIC'; label: string }) => {
   searchType.value = option.value;
   isDropdownOpen.value = false;
 };
+
 const handleClickOutside = (event: MouseEvent) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target as Node)) {
     isDropdownOpen.value = false;
@@ -57,9 +60,6 @@ onMounted(() => document.addEventListener('mousedown', handleClickOutside));
 onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside));
 
 // --- API Logic ---
-// MODIFICATION: Removed the placeholder `declare function get(...)`
-// The real `search` function with Amplify is below.
-
 async function search() {
   errorMessage.value = '';
   searchResults.value = null;
@@ -71,7 +71,6 @@ async function search() {
     return;
   }
 
-  // MODIFICATION: This entire try/catch block is from your reference code
   try {
     const path = '/company';
     const queryParams = {
@@ -80,11 +79,9 @@ async function search() {
     };
 
     const restOperation = get({
-      apiName: "BizFinderAPI", // Your configured API name in main.ts
+      apiName: "BizFinderAPI",
       path: path,
-      options: {
-        queryParams: queryParams,
-      }
+      options: { queryParams: queryParams }
     });
     
     const { body } = await restOperation.response;
@@ -95,10 +92,15 @@ async function search() {
         data: rawResponse
       };
     } else {
-      // Handle cases where the API returns a message, e.g., "Not Found"
-      errorMessage.value = rawResponse.message || 'No results found or invalid response format.';
+      // MODIFICATION FOR ERROR 1: Safely check for the 'message' property.
+      if (rawResponse && typeof rawResponse === 'object' && 'message' in rawResponse) {
+        // Now it's safe to access .message because we've checked for it.
+        errorMessage.value = (rawResponse as { message: string }).message;
+      } else {
+        // Fallback for any other non-successful response format.
+        errorMessage.value = 'No results found or invalid response format.';
+      }
     }
-
   } catch (error: unknown) {
     console.error('An error occurred during the API call:', error);
     if (error instanceof Error) {
