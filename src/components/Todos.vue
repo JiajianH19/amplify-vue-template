@@ -196,7 +196,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .subtitle { font-size: 1.5rem; font-weight: 400; margin-top: 10px; color: #374151; }
 
 /* --- Unified Search Box --- */
-.search-box-unified { display: flex; align-items: center; width: 80%; max-width: 600px; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); background: rgba(255, 255, 255, 0.6); border-radius: 50px; overflow: hidden; transition: border-color 0.2s; }
+.search-box-unified { display: flex; align-items: center; width: 80%; max-width: 600px; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); background: rgba(255, 255, 255, 0.6); border-radius: 50px; transition: border-color 0.2s; }
 .search-box-unified:focus-within { border-color: #3b82f6; }
 .custom-dropdown { position: relative; flex-shrink: 0; }
 .dropdown-toggle { background: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.1); background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em 1.2em; padding: 15px 45px 15px 20px; font-size: 1.1rem; font-family: inherit; outline: none; color: #1f2937; cursor: pointer; text-align: left; }
