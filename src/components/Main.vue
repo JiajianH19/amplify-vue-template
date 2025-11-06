@@ -75,16 +75,13 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 // --- MODIFICATION: New function to clear results ---
 function resetResults() {
-  searchResults.type = null;
   searchResults.value = null;
   errorMessage.value = '';
 }
 
 // --- API Logic ---
 async function search() {
-  errorMessage.value = '';
-  searchResults.type = null;
-  searchResults.value = null;
+  resetResults();
   isLoading.value = true;
 
   if (!searchText.value.trim()) {
@@ -109,14 +106,14 @@ async function search() {
     const { body } = await restOperation.response;
     const rawResponse = await body.json();
     if (isSsicSummaryResponse(rawResponse)) {
-      searchResults.type = 'SSIC',
       searchResults.value = {
+        type: 'SSIC',
         data: rawResponse
       };
     }
     else if (isBizFinderResponse(rawResponse)) {
-      searchResults.type = 'UEN',
       searchResults.value = {
+        type: 'UEN',
         data: rawResponse
       };
     } else {
