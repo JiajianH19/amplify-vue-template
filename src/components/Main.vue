@@ -130,7 +130,7 @@ async function search() {
     console.error('An error occurred during the API call:', error);
     
     // MODIFICATION: Specifically check for a 404 status code from the API response
-    if (error && error.response && error.response.statusCode === 404) {
+    if ((error as any)?.response?.statusCode === 404) {
       errorMessage.value = "No Live Company Found";
     }
     // Fallback for other types of errors
