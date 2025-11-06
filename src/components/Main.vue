@@ -115,7 +115,7 @@ async function search() {
       };
     }
     else if (isBizFinderResponse(rawResponse)) {
-      searchResults.TYPE = 'UEN',
+      searchResults.type = 'UEN',
       searchResults.value = {
         data: rawResponse
       };
