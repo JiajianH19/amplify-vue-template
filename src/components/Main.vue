@@ -15,14 +15,28 @@ interface BusinessData {
   REGISTRATION_INCORPORATION_DATE: string;
 }
 
+interface SsicSummaryData {
+  DATA_TYPE: string; // Still useful to have in the type definition
+  SSIC: string;
+  TOTAL_COUNT: number;
+}
+
 interface BizFinderResponse {
-  data: BusinessData;
+  type: string;
+  data: BusinessData | SsicSummaryData;
 }
 
 const isBizFinderResponse = (data: unknown): data is BusinessData => {
   if (!data || typeof data !== 'object') return false;
   const response = data as any;
   return 'UEN' in response && 'ENTITY_NAME' in response && 'DATA_TYPE' in response;
+};
+
+const isSsicSummaryResponse = (data: unknown): data is SsicSummaryData => {
+  if (!data || typeof data !== 'object') return false;
+  const response = data as any;
+  // MODIFICATION: Removed the check for DATA_TYPE. The presence of SSIC and TOTAL_COUNT is enough.
+  return 'SSIC' in response && 'TOTAL_COUNT' in response;
 };
 
 // --- Component State ---
@@ -59,9 +73,17 @@ const handleClickOutside = (event: MouseEvent) => {
 onMounted(() => document.addEventListener('mousedown', handleClickOutside));
 onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside));
 
+// --- MODIFICATION: New function to clear results ---
+function resetResults() {
+  searchResults.type = null;
+  searchResults.value = null;
+  errorMessage.value = '';
+}
+
 // --- API Logic ---
 async function search() {
   errorMessage.value = '';
+  searchResults.type = null;
   searchResults.value = null;
   isLoading.value = true;
 
@@ -86,8 +108,14 @@ async function search() {
     
     const { body } = await restOperation.response;
     const rawResponse = await body.json();
- 
-    if (isBizFinderResponse(rawResponse)) {
+    if (isSsicSummaryResponse(rawResponse)) {
+      searchResults.type = 'SSIC',
+      searchResults.value = {
+        data: rawResponse
+      };
+    }
+    else if (isBizFinderResponse(rawResponse)) {
+      searchResults.TYPE = 'UEN',
       searchResults.value = {
         data: rawResponse
       };
@@ -103,10 +131,16 @@ async function search() {
     }
   } catch (error: unknown) {
     console.error('An error occurred during the API call:', error);
-    if (error instanceof Error) {
+    
+    // MODIFICATION: Specifically check for a 404 status code from the API response
+    if (error && error.response && error.response.statusCode === 404) {
+      errorMessage.value = "No Live Company Found";
+    }
+    // Fallback for other types of errors
+    else if (error instanceof Error) {
       errorMessage.value = error.message;
     } else {
-      errorMessage.value = 'Failed to fetch data. Check browser console.';
+      errorMessage.value = 'An unexpected error occurred. Please try again.';
     }
   } finally {
     isLoading.value = false;
@@ -130,7 +164,7 @@ async function search() {
         <h2 class="subtitle">Find Business Information Instantly.</h2>
       </div>
 
-      <div class="search-box-unified">
+      <div class="search-box-unified" @click="resetResults">
         <div class="custom-dropdown" ref="dropdownRef">
           <button @click="toggleDropdown" class="dropdown-toggle">
             {{ searchType }}
@@ -174,13 +208,56 @@ async function search() {
 
       <div v-if="!isLoading && (errorMessage || searchResults)" class="results-container-glass">
         <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
+        
         <div v-if="searchResults">
           <h3>Search Result</h3>
-          <ul class="results-list">
-             <li v-for="(value, key) in searchResults.data" :key="key">
-                <strong>{{ key.replace(/_/g, ' ') }}:</strong> 
-                <span>{{ value || 'N/A' }}</span>
-             </li>
+
+          <!-- This template logic already works correctly and doesn't need to be changed -->
+          <ul v-if="searchResults.type == 'SSIC'" class="results-list">
+            <li>
+              <strong>SSIC CODE:</strong>
+              <span>{{ searchResults.data.SSIC }}</span>
+            </li>
+            <li>
+              <strong>Total Companies:</strong>
+              <span>{{ searchResults.data.TOTAL_COUNT }}</span>
+            </li>
+          </ul>
+
+          <ul v-else class="results-list">
+             <!-- <li v-for="(value, key) in searchResults.data" :key="key">
+                <strong v-if="key !== 'DATA_TYPE'">{{ key.replace(/_/g, ' ') }}:</strong> 
+                <span v-if="key !== 'DATA_TYPE'">{{ value || 'N/A' }}</span>
+             </li> -->
+
+            <li>
+              <strong>UEN:</strong>
+              <span>{{ searchResults.data.UEN }}</span>
+            </li>
+            <li>
+              <strong>ENTITY NAME:</strong>
+              <span>{{ searchResults.data.ENTITY_NAME }}</span>
+            </li>
+            <li>
+              <strong>ENTITY TYPE DESCRIPTION:</strong>
+              <span>{{ searchResults.data.ENTITY_TYPE_DESCRIPTION }}</span>
+            </li>
+            <li>
+              <strong>BUSINESS CONSTITUTION DESCRIPTION:</strong>
+              <span>{{ searchResults.data.BUSINESS_CONSTITUTION_DESCRIPTION }}</span>
+            </li>
+            <li>
+              <strong>PRIMARY SSIC CODE:</strong>
+              <span>{{ searchResults.data.PRIMARY_SSIC_CODE }}</span>
+            </li>
+            <li>
+              <strong>ENTITY STATUS DESCRIPTION:</strong>
+              <span>{{ searchResults.data.ENTITY_STATUS_DESCRIPTION }}</span>
+            </li>
+            <li>
+              <strong>REGISTRATION INCORPORATION DATE:</strong>
+              <span>{{ searchResults.data.REGISTRATION_INCORPORATION_DATE }}</span>
+            </li>
           </ul>
         </div>
       </div>
