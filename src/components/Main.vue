@@ -210,7 +210,7 @@ async function search() {
           <h3>Search Result</h3>
 
           <!-- This template logic already works correctly and doesn't need to be changed -->
-          <ul v-if="searchResults.type == 'SSIC'" class="results-list">
+          <ul v-if="searchResults.value.type == 'SSIC'" class="results-list">
             <li>
               <strong>SSIC CODE:</strong>
               <span>{{ searchResults.data.SSIC }}</span>
