@@ -154,11 +154,19 @@ async function search() {
           placeholder="Enter search term..."
           class="text-input-unified"
         />
-      </div>
 
-      <button @click="search" :disabled="isLoading" class="search-button-glass">
-        {{ isLoading ? 'Searching...' : 'Search' }}
-      </button>
+          <button @click="search" :disabled="isLoading" class="search-icon-button">
+          <!-- Show spinner when loading -->
+          <svg v-if="isLoading" class="spinner-icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <!-- Show magnify glass when not loading -->
+          <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon-svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+          </svg>
+        </button>
+      </div>
 
       <div v-if="isLoading" class="loading-spinner-container">
         <div class="spinner-outer"></div>
@@ -178,6 +186,48 @@ async function search() {
       </div>
     </div>
   </main>
+
+<footer class="footer-container">
+  <div class="footer-content">
+    <!-- This is the empty spacer column on the left -->
+    <div class="footer-column footer-spacer-left"></div>
+
+    <!-- Customer Service Column -->
+    <div class="footer-column footer-customer-service">
+      <h3 class="footer-heading">Customer Service & Support</h3>
+      <div class="footer-links-container">
+        <div class="footer-links">
+          <a href="tel:+6564396608">(+65) 6439 6608</a>
+          <a href="tel:+6565656161">(+65) 6565 6161</a>
+          <a href="mailto:csc@sccb.com.sg">csc@sccb.com.sg</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Office Address Column -->
+    <div class="footer-column footer-office-address">
+      <h3 class="footer-heading">Office Address</h3>
+      <div class="footer-text-group">
+        <p>6 Shenton Way</p>
+        <p>OUE Downtown 2,</p>
+        <p>#17-10</p>
+        <p>Singapore 068809</p>
+      </div>
+    </div>
+
+    <!-- Business Hours Column -->
+    <div class="footer-column footer-business-hours">
+      <h3 class="footer-heading">Business Hours</h3>
+      <div class="footer-text-group">
+        <p>Monday to Friday, 8.30am to 6pm.</p>
+        <p>Closed on Weekends and Public Holidays.</p>
+      </div>
+    </div>
+
+    <!-- This is the empty spacer column on the right -->
+    <div class="footer-column footer-spacer-right"></div>
+  </div>
+</footer>
 </template>
 
 <style>
@@ -187,7 +237,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; max-width: 800px; text-align: center; }
 
 /* --- Logo --- */
-.logo-container { position: absolute; top: 2rem; right: 2.5rem; z-index: 10; }
+.logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; }
 .logo-image { height: 35px; width: auto; }
 
 /* --- Typography --- */
@@ -196,9 +246,33 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .subtitle { font-size: 1.5rem; font-weight: 400; margin-top: 10px; color: #374151; }
 
 /* --- Unified Search Box --- */
-.search-box-unified { display: flex; align-items: center; width: 80%; max-width: 600px; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); background: rgba(255, 255, 255, 0.6); border-radius: 50px; transition: border-color 0.2s; }
-.search-box-unified:focus-within { border-color: #3b82f6; }
+.search-box-unified {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  max-width: 600px;
+  backdrop-filter: blur(12px);
+  border: 2px solid #c4c1e0;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  background: white;
+  border-radius: 50px;
+  transition: border-color 0.2s;
+}
+.search-box-unified:focus-within { border-color: #8dc6ff; }
 .custom-dropdown { position: relative; flex-shrink: 0; }
+.dropdown-toggle { background: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.1); background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em 1.2em; padding: 15px 45px 15px 20px; font-size: 1.1rem; font-family: inherit; outline: none; color: #1f2937; cursor: pointer; text-align: left; }
+.text-input-unified {
+  background: transparent;
+  border: none;
+  /* Adjust padding to make space for the button */
+  padding: 15px 5px 15px 20px;
+  width: 100%;
+  flex-grow: 1;
+  font-size: 1.1rem;
+  outline: none;
+  color: #1f2937;
+}
+custom-dropdown { position: relative; flex-shrink: 0; }
 .dropdown-toggle { background: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.1); background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em 1.2em; padding: 15px 45px 15px 20px; font-size: 1.1rem; font-family: inherit; outline: none; color: #1f2937; cursor: pointer; text-align: left; }
 .text-input-unified { background: transparent; border: none; padding: 15px 20px; width: 100%; flex-grow: 1; font-size: 1.1rem; outline: none; color: #1f2937; }
 .text-input-unified::placeholder { color: #6b7280; }
@@ -207,6 +281,33 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .dropdown-item:hover { background-color: rgba(59, 130, 246, 0.1); }
 
 /* --- Other Buttons and Containers --- */
+/* New styles for the icon button */
+.search-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem; /* 16px padding on left/right */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  height: 100%; /* Make it fill the parent's height */
+}
+.search-icon-svg, .spinner-icon-svg {
+  width: 24px;
+  height: 24px;
+  color: #6b7280; /* Gray color for the icon */
+  transition: color 0.2s ease;
+}
+.search-icon-button:hover:not(:disabled) .search-icon-svg {
+  color: #1f2937; /* Darker color on hover */
+}
+.search-icon-button:disabled {
+  cursor: not-allowed;
+}
+/* Spinner icon animation */
+.spinner-icon-svg {
+  animation: spin 1s linear infinite;
+}
 .search-button-glass { padding: 12px 30px; font-size: 1.1rem; font-weight: 600; color: white; background: linear-gradient(to right, #3b82f6, #06b6d4); border: none; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
 .search-button-glass:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4); }
 .search-button-glass:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -232,5 +333,120 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 @media (max-width: 768px) {
   .logo-container { top: 1.5rem; right: 1.5rem; }
   .logo-image { height: 28px; }
+}
+
+
+/* General styles for the footer container */
+.footer-container {
+  background-color: #ffffff; /* From: bg-white */
+  padding-top: 3rem;      /* From: py-12 */
+  padding-bottom: 3rem;   /* From: py-12 */
+}
+
+/* The main flexbox layout for the content */
+.footer-content {
+  display: flex;          /* From: flex */
+  flex-direction: row;    /* From: flex-row */
+  justify-content: space-around; /* From: justify-around */
+}
+
+/* A base style for all columns inside the footer */
+.footer-column {
+  display: flex;          /* From: flex */
+  flex-direction: column; /* From: flex-col */
+  gap: 1rem;              /* From: gap-4 */
+}
+
+/* Specific widths and paddings for each column */
+.footer-spacer-left { width: 12%; }
+.footer-customer-service { width: 32%; padding-left: 0.75rem; } /* From: w-[32%] pl-3 */
+.footer-office-address { width: 23%; padding-left: 0.5rem; }   /* From: w-[23%] pl-2 */
+.footer-business-hours { width: 29%; padding-left: 0.5rem; }  /* From: w-[29%] pl-2 */
+.footer-spacer-right { width: 4%; }
+
+/* Styling for the headings (h3) */
+.footer-heading {
+  font-size: 1.25rem;      /* From: text-xl */
+  font-weight: 700;        /* From: font-bold */
+  color: #1f2937;          /* From: text-gray-800 */
+  border-left: 2px solid #e5e7eb; /* From: border-l-2 (color is a standard gray) */
+  padding-left: 0.5rem;    /* From: pl-2 */
+  margin: 0;
+}
+
+/* Container for the contact links */
+.footer-links-container {
+  display: flex;           /* From: flex */
+  gap: 2rem;               /* From: gap-8 */
+}
+
+/* Styling for the group of links */
+.footer-links {
+  display: flex;           /* From: flex */
+  flex-direction: column;  /* From: flex-col */
+  gap: 0.5rem;             /* From: gap-2 */
+  color: #4b5563;          /* From: text-gray-600 */
+}
+
+/* Styling for the links themselves */
+.footer-links a {
+  color: inherit; /* Ensures the link takes the color of its parent */
+  text-decoration: none; /* A common practice for footer links */
+  transition: color 0.2s ease-in-out; /* Adds a smooth color change on hover */
+}
+
+/* Hover effect for the links */
+.footer-links a:hover {
+  color: #111827;          /* From: hover:text-gray-900 */
+}
+
+/* Styling for the address and hours text blocks */
+.footer-text-group {
+  display: flex;           /* From: flex */
+  flex-direction: column;  /* From: flex-col */
+  gap: 0.25rem;            /* From: gap-1 */
+  color: #4b5563;          /* From: text-gray-600 */
+}
+
+/* Tailwind resets margins on paragraphs, so we should do the same */
+.footer-text-group p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+
+  /* 1. Change the main container to stack columns vertically */
+  .footer-content {
+    flex-direction: column; /* Stack items vertically instead of in a row */
+    align-items: center;    /* Center the stacked columns horizontally */
+    gap: 2.5rem;            /* Increase the space between the stacked items */
+  }
+
+  /* 2. Make each content column take up more width and center its text */
+  .footer-column {
+    width: 90%;             /* Allow each column to be much wider */
+    max-width: 400px;       /* But not too wide on a tablet */
+    text-align: center;     /* Center the text content within each column */
+    padding-left: 0;        /* Remove the desktop-specific left padding */
+  }
+
+  /* 3. Adjust the headings for a vertical layout */
+  .footer-heading {
+    border-left: none;              /* Remove the vertical border on the side */
+    padding-left: 0;                /* Remove the side padding */
+    border-bottom: 2px solid #e5e7eb; /* Add a horizontal border underneath instead */
+    padding-bottom: 0.75rem;        /* Add some space below the heading text */
+  }
+
+  /* 4. Center the block of contact links */
+  .footer-links-container {
+    justify-content: center; /* Centers the links block within its container */
+  }
+
+  /* 5. Hide the empty spacer columns, as they are not needed on mobile */
+  .footer-spacer-left,
+  .footer-spacer-right {
+    display: none;
+  }
 }
 </style>
