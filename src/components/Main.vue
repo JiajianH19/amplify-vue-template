@@ -256,9 +256,12 @@ async function getCompanyDetailsByUen(uen: string) {
 
     <main class="main-content">
 
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="blob blob3"></div>
+      <!-- NEW: A dedicated container for the blobs that will have overflow: hidden -->
+      <div class="blobs-container">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+      </div>
 
     <div class="content-wrapper">
       <Transition name="fade-slide">
@@ -506,7 +509,6 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
   justify-content: center;
   padding: 20px;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; max-width: 800px; text-align: center; }
@@ -632,10 +634,20 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 /* --- Animations --- */
 .loading-spinner-container { margin-top: 20px; display:flex; justify-content: center;}
 .spinner-outer { width: 40px; height: 40px; border: 4px solid rgba(0, 0, 0, 0.1); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+/* NEW: Add these styles for the new blobs container */
+.blobs-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* The overflow property now lives here! */
+  z-index: 1; /* Sits behind the content-wrapper */
+}
 .blob { position: absolute; border-radius: 50%; mix-blend-mode: multiply; filter: blur(70px); z-index: 1; }
-.blob1 { width: 250px; height: 250px; top: 15%; left: 20%; background: rgba(0, 94, 184, 0.2); animation: blob 8s infinite; }
+/* .blob1 { width: 250px; height: 250px; top: 15%; left: 20%; background: rgba(0, 94, 184, 0.2); animation: blob 8s infinite; }
 .blob2 { width: 300px; height: 300px; top: 30%; right: 25%; background: rgba(0, 120, 212, 0.2); animation: blob 10s infinite reverse; }
-.blob3 { width: 200px; height: 200px; bottom: 15%; left: 30%; background: rgba(0, 165, 224, 0.2); animation: blob 7s infinite; }
+.blob3 { width: 200px; height: 200px; bottom: 15%; left: 30%; background: rgba(0, 165, 224, 0.2); animation: blob 7s infinite; } */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
 
