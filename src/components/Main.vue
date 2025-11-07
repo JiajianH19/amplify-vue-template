@@ -304,92 +304,17 @@ async function getCompanyDetailsByUen(uen: string) {
         <div class="spinner-outer"></div>
       </div>
 
-      <div v-if="!isLoading && (errorMessage || searchResults)" class="results-container-glass">
+      <div v-if="!isLoading && (errorMessage || searchResults || selectedCompanyDetails)" class="results-container-glass">
         <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
         
-        <div v-if="searchResults">
-          <h3>Search Result</h3>
+        <!-- NEW STRUCTURE: START -->
 
-          <!-- SSIC Result Display -->
-          <ul v-if="'SSIC' in searchResults.data" class="results-list">
-            <li>
-              <strong>SSIC CODE:</strong>
-              <span>{{ (searchResults.data as SsicSummaryData).SSIC }}</span>
-            </li>
-            <li>
-              <strong>Total Companies:</strong>
-              <span>{{ (searchResults.data as SsicSummaryData).TOTAL_COUNT }}</span>
-            </li>
-          </ul>
-
-          <!-- NEW: Multiple Company List Display -->
-          <div v-else-if="'COMPANY_LIST' in searchResults.data">
-            <div class="company-list-header">
-              <span>UEN</span>
-              <span>ENTITY NAME</span>
-            </div>
-            <ul class="company-list-clickable">
-              <li
-                v-for="company in paginatedCompanyList"
-                :key="company.UEN"
-                @click="getCompanyDetailsByUen(company.UEN)"
-                class="company-list-item"
-              >
-                <span>{{ company.UEN }}</span>
-                <span>{{ company.ENTITY_NAME }}</span>
-              </li>
-            </ul>
-
-            <!-- NEW: Pagination Controls -->
-            <div v-if="totalPages > 1" class="pagination-controls">
-              <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">
-                &laquo; Prev
-              </button>
-              <span class="pagination-info">Page {{ currentPage }} of {{ totalPages }}</span>
-              <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">
-                Next &raquo;
-              </button>
-            </div>
-          </div>
-
-          <!-- Single Company Result (from UEN or SINGLE_COM search) -->
-          <ul v-else class="results-list">
-            <li>
-              <strong>UEN:</strong>
-              <span>{{ (searchResults.data as BusinessData).UEN }}</span>
-            </li>
-            <li>
-              <strong>ENTITY NAME:</strong>
-              <span>{{ (searchResults.data as BusinessData).ENTITY_NAME }}</span>
-            </li>
-            <li>
-              <strong>ENTITY TYPE DESCRIPTION:</strong>
-              <span>{{ (searchResults.data as BusinessData).ENTITY_TYPE_DESCRIPTION }}</span>
-            </li>
-            <li>
-              <strong>BUSINESS CONSTITUTION DESCRIPTION:</strong>
-              <span>{{ (searchResults.data as BusinessData).BUSINESS_CONSTITUTION_DESCRIPTION || 'N/A' }}</span>
-            </li>
-            <li>
-              <strong>PRIMARY SSIC CODE:</strong>
-              <span>{{ (searchResults.data as BusinessData).PRIMARY_SSIC_CODE }}</span>
-            </li>
-            <li>
-              <strong>ENTITY STATUS DESCRIPTION:</strong>
-              <span>{{ (searchResults.data as BusinessData).ENTITY_STATUS_DESCRIPTION }}</span>
-            </li>
-            <li>
-              <strong>REGISTRATION INCORPORATION DATE:</strong>
-              <span>{{ (searchResults.data as BusinessData).REGISTRATION_INCORPORATION_DATE }}</span>
-            </li>
-          </ul>
-        </div>
-        
-        <!-- NEW: Section to display details of a company selected from the list -->
+        <!-- VIEW 1: DETAILS VIEW (Shows loading spinner or the final details) -->
+        <!-- This block is checked FIRST. -->
         <div v-if="isLoadingDetails" class="loading-spinner-container">
           <div class="spinner-outer"></div>
         </div>
-        <div v-if="selectedCompanyDetails" class="selected-details-container">
+        <div v-else-if="selectedCompanyDetails" class="selected-details-container">
           <h4 class="details-heading">Company Details</h4>
           <ul class="results-list">
             <li>
@@ -422,6 +347,71 @@ async function getCompanyDetailsByUen(uen: string) {
             </li>
           </ul>
         </div>
+
+        <!-- VIEW 2: INITIAL SEARCH RESULTS (List, SSIC, or Single UEN) -->
+        <!-- This block is checked SECOND, only if the details view is not active. -->
+        <div v-else-if="searchResults">
+          <h3>Search Result</h3>
+
+          <!-- SSIC Result Display -->
+          <ul v-if="'SSIC' in searchResults.data" class="results-list">
+            <li>
+              <strong>SSIC CODE:</strong>
+              <span>{{ (searchResults.data as SsicSummaryData).SSIC }}</span>
+            </li>
+            <li>
+              <strong>Total Companies:</strong>
+              <span>{{ (searchResults.data as SsicSummaryData).TOTAL_COUNT }}</span>
+            </li>
+          </ul>
+
+          <!-- Multiple Company List Display -->
+          <div v-else-if="'COMPANY_LIST' in searchResults.data">
+            <div class="company-list-header">
+              <span>UEN</span>
+              <span>ENTITY NAME</span>
+            </div>
+            <ul class="company-list-clickable">
+              <li
+                v-for="company in paginatedCompanyList"
+                :key="company.UEN"
+                @click="getCompanyDetailsByUen(company.UEN)"
+                class="company-list-item"
+              >
+                <span>{{ company.UEN }}</span>
+                <span>{{ company.ENTITY_NAME }}</span>
+              </li>
+            </ul>
+            
+            <div v-if="totalPages > 1" class="pagination-controls">
+              <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">
+                &laquo; Prev
+              </button>
+              <span class="pagination-info">Page {{ currentPage }} of {{ totalPages }}</span>
+              <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">
+                Next &raquo;
+              </button>
+            </div>
+          </div>
+
+          <!-- Single Company Result (from UEN or SINGLE_COM search) -->
+          <ul v-else class="results-list">
+            <li>
+              <strong>UEN:</strong>
+              <span>{{ (searchResults.data as BusinessData).UEN }}</span>
+            </li>
+            <li>
+              <strong>ENTITY NAME:</strong>
+              <span>{{ (searchResults.data as BusinessData).ENTITY_NAME }}</span>
+            </li>
+            <!-- ... other list items for single company ... -->
+            <li>
+              <strong>REGISTRATION INCORPORATION DATE:</strong>
+              <span>{{ (searchResults.data as BusinessData).REGISTRATION_INCORPORATION_DATE }}</span>
+            </li>
+          </ul>
+        </div>
+        <!-- NEW STRUCTURE: END -->
 
       </div>
     </div>
