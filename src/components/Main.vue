@@ -144,8 +144,8 @@ function prevPage() {
 
 // --- API Logic ---
 async function search() {
-  showHeadings.value = false;
   resetResults();
+  showHeadings.value = false;
   isLoading.value = true;
 
   if (!searchText.value.trim()) {
