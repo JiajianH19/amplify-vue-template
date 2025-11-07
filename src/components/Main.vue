@@ -247,10 +247,14 @@ async function getCompanyDetailsByUen(uen: string) {
 </script>
 
 <template>
-  <main class="hero-container">
-    <div class="logo-container">
-      <img :src="dnbLogo" alt="Dun & Bradstreet Logo" class="logo-image" />
-    </div>
+  <div class="page-layout">
+    <header class="page-header">
+      <div class="logo-container">
+        <img :src="dnbLogo" alt="Dun & Bradstreet Logo" class="logo-image" />
+      </div>
+    </header>
+
+    <main class="main-content">
 
     <div class="blob blob1"></div>
     <div class="blob blob2"></div>
@@ -404,7 +408,22 @@ async function getCompanyDetailsByUen(uen: string) {
               <strong>ENTITY NAME:</strong>
               <span>{{ (searchResults.data as BusinessData).ENTITY_NAME }}</span>
             </li>
-            <!-- ... other list items for single company ... -->
+            <li>
+              <strong>ENTITY TYPE DESCRIPTION:</strong>
+              <span>{{ (searchResults.data as BusinessData).ENTITY_TYPE_DESCRIPTION }}</span>
+            </li>
+            <li>
+              <strong>BUSINESS CONSTITUTION DESCRIPTION:</strong>
+              <span>{{ (searchResults.data as BusinessData).BUSINESS_CONSTITUTION_DESCRIPTION || 'N/A' }}</span>
+            </li>
+            <li>
+              <strong>PRIMARY SSIC CODE:</strong>
+              <span>{{ (searchResults.data as BusinessData).PRIMARY_SSIC_CODE }}</span>
+            </li>
+            <li>
+              <strong>ENTITY STATUS DESCRIPTION:</strong>
+              <span>{{ (searchResults.data as BusinessData).ENTITY_STATUS_DESCRIPTION }}</span>
+            </li>
             <li>
               <strong>REGISTRATION INCORPORATION DATE:</strong>
               <span>{{ (searchResults.data as BusinessData).REGISTRATION_INCORPORATION_DATE }}</span>
@@ -457,16 +476,44 @@ async function getCompanyDetailsByUen(uen: string) {
       <div class="footer-column footer-spacer-right"></div>
     </div>
   </footer>
+  </div>
 </template>
 
 <style>
 /* --- Base and Layout --- */
 body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 .hero-container { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden; background: linear-gradient(to bottom right, #EEF2FF, #EFF6FF, #ECFEFF); }
+
+.page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #EEF2FF, #EFF6FF, #ECFEFF);
+}
+
+.page-header {
+  padding: 2rem 0 0 2.5rem;
+  flex-shrink: 0;
+}
+
+/* MODIFIED: Replaced .hero-container with .main-content */
+.main-content {
+  flex-grow: 1; 
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; max-width: 800px; text-align: center; }
 
+
 /* --- Logo --- */
-.logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; }
+/* .logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; } */
 .logo-image { height: 35px; width: auto; }
 
 /* --- Typography --- */
