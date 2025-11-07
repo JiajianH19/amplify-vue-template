@@ -256,12 +256,13 @@ async function getCompanyDetailsByUen(uen: string) {
     <div class="blob blob2"></div>
     <div class="blob blob3"></div>
 
-    <Transition name="fade-slide">
-      <div v-if="showHeadings" class="headings">
-        <h1 class="title">BizFinder</h1>
-        <h2 class="subtitle">Find Business Information Instantly.</h2>
-      </div>
-    </Transition>
+    <div class="content-wrapper">
+      <Transition name="fade-slide">
+        <div v-if="showHeadings" class="headings">
+          <h1 class="title">BizFinder</h1>
+          <h2 class="subtitle">Find Business Information Instantly.</h2>
+        </div>
+      </Transition>
 
       <div class="search-box-unified" @click="resetResults">
         <div class="custom-dropdown" ref="dropdownRef">
