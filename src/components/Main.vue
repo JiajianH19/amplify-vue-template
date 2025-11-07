@@ -74,6 +74,9 @@ const itemsPerPage = ref(10); // You can change this value to show more/less ite
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 
+// NEW: State to control the visibility of the main headings
+const showHeadings = ref(true);
+
 const dropdownOptions = [
   { value: 'UEN', label: 'UEN' },
   { value: 'NAME', label: 'Name' },
@@ -97,6 +100,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 // MODIFIED: Update reset function to clear new state properties
 function resetResults() {
+  showHeadings.value = true;
   searchResults.value = null;
   errorMessage.value = '';
   selectedCompanyDetails.value = null; // Also reset the selected company
@@ -140,6 +144,7 @@ function prevPage() {
 
 // --- API Logic ---
 async function search() {
+  showHeadings.value = false;
   resetResults();
   isLoading.value = true;
 
@@ -251,11 +256,12 @@ async function getCompanyDetailsByUen(uen: string) {
     <div class="blob blob2"></div>
     <div class="blob blob3"></div>
 
-    <div class="content-wrapper">
-      <div class="headings">
+    <Transition name="fade-slide">
+      <div v-if="showHeadings" class="headings">
         <h1 class="title">BizFinder</h1>
         <h2 class="subtitle">Find Business Information Instantly.</h2>
       </div>
+    </Transition>
 
       <div class="search-box-unified" @click="resetResults">
         <div class="custom-dropdown" ref="dropdownRef">
@@ -757,5 +763,25 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 .pagination-info {
   color: #4b5563;
   font-weight: 500;
+}
+
+/*
+  Defines the properties to be animated (opacity and transform) and the duration/easing.
+  This class is active during the entire enter/leave animation.
+*/
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/*
+  Defines the starting state for the enter animation (when it appears)
+  and the final state for the leave animation (when it disappears).
+  The element will be transparent and slightly moved up.
+*/
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
 }
 </style>
