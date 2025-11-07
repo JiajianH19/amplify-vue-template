@@ -66,6 +66,10 @@ const isLoading = ref(false);
 const selectedCompanyDetails = ref<BusinessData | null>(null);
 const isLoadingDetails = ref(false); // Spinner for when fetching details after a click
 
+// NEW: State for pagination
+const currentPage = ref(1);
+const itemsPerPage = ref(10); // You can change this value to show more/less items per page
+
 // --- State for Custom Dropdown ---
 const isDropdownOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
@@ -96,6 +100,42 @@ function resetResults() {
   searchResults.value = null;
   errorMessage.value = '';
   selectedCompanyDetails.value = null; // Also reset the selected company
+  currentPage.value = 1; // Reset to the first page on new search
+}
+
+// --- NEW: Computed Properties for Pagination ---
+const totalPages = computed(() => {
+  if (searchResults.value?.type === 'MULTIPLE_COM' && 'COMPANY_LIST' in searchResults.value.data) {
+    return Math.ceil(searchResults.value.data.COMPANY_LIST.length / itemsPerPage.value);
+  }
+  return 0;
+});
+
+const paginatedCompanyList = computed(() => {
+  if (searchResults.value?.type === 'MULTIPLE_COM' && 'COMPANY_LIST' in searchResults.value.data) {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return searchResults.value.data.COMPANY_LIST.slice(start, end);
+  }
+  return [];
+});
+
+
+// --- NEW: Pagination Navigation Functions ---
+function goToPage(pageNumber: number) {
+  if (pageNumber >= 1 && pageNumber <= totalPages.value) {
+    currentPage.value = pageNumber;
+  }
+}
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+}
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
 }
 
 // --- API Logic ---
@@ -283,7 +323,7 @@ async function getCompanyDetailsByUen(uen: string) {
             </div>
             <ul class="company-list-clickable">
               <li
-                v-for="company in (searchResults.data as MultipleCompanyResponse).COMPANY_LIST"
+                v-for="company in paginatedCompanyList"
                 :key="company.UEN"
                 @click="getCompanyDetailsByUen(company.UEN)"
                 class="company-list-item"
@@ -292,6 +332,17 @@ async function getCompanyDetailsByUen(uen: string) {
                 <span>{{ company.ENTITY_NAME }}</span>
               </li>
             </ul>
+
+            <!-- NEW: Pagination Controls -->
+            <div v-if="totalPages > 1" class="pagination-controls">
+              <button @click="prevPage" :disabled="currentPage === 1" class="pagination-button">
+                &laquo; Prev
+              </button>
+              <span class="pagination-info">Page {{ currentPage }} of {{ totalPages }}</span>
+              <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-button">
+                Next &raquo;
+              </button>
+            </div>
           </div>
 
           <!-- Single Company Result (from UEN or SINGLE_COM search) -->
@@ -369,9 +420,45 @@ async function getCompanyDetailsByUen(uen: string) {
     </div>
   </main>
 
-  <!-- Footer remains unchanged -->
   <footer class="footer-container">
-    <!-- ... footer content ... -->
+    <div class="footer-content">
+      <!-- This is the empty spacer column on the left -->
+      <div class="footer-column footer-spacer-left"></div>
+      <!-- Customer Service Column -->
+      <div class="footer-column footer-customer-service">
+        <h3 class="footer-heading">Customer Service & Support</h3>
+        <div class="footer-links-container">
+          <div class="footer-links">
+            <a href="tel:+6564396608">(+65) 6439 6608</a>
+            <a href="tel:+6565656161">(+65) 6565 6161</a>
+            <a href="mailto:csc@sccb.com.sg">csc@sccb.com.sg</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Office Address Column -->
+      <div class="footer-column footer-office-address">
+        <h3 class="footer-heading">Office Address</h3>
+        <div class="footer-text-group">
+          <p>6 Shenton Way</p>
+          <p>OUE Downtown 2,</p>
+          <p>#17-10</p>
+          <p>Singapore 068809</p>
+        </div>
+      </div>
+
+      <!-- Business Hours Column -->
+      <div class="footer-column footer-business-hours">
+        <h3 class="footer-heading">Business Hours</h3>
+        <div class="footer-text-group">
+          <p>Monday to Friday, 8.30am to 6pm.</p>
+          <p>Closed on Weekends and Public Holidays.</p>
+        </div>
+      </div>
+
+      <!-- This is the empty spacer column on the right -->
+      <div class="footer-column footer-spacer-right"></div>
+    </div>
   </footer>
 </template>
 
@@ -523,5 +610,152 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 }
 
 /* --- Footer Styles --- */
-/* ... All existing footer styles remain unchanged ... */
+/* General styles for the footer container */
+.footer-container {
+  background-color: #ffffff; /* From: bg-white */
+  padding-top: 3rem;      /* From: py-12 */
+  padding-bottom: 3rem;   /* From: py-12 */
+}
+
+/* The main flexbox layout for the content */
+.footer-content {
+  display: flex;          /* From: flex */
+  flex-direction: row;    /* From: flex-row */
+  justify-content: space-around; /* From: justify-around */
+}
+
+/* A base style for all columns inside the footer */
+.footer-column {
+  display: flex;          /* From: flex */
+  flex-direction: column; /* From: flex-col */
+  gap: 1rem;              /* From: gap-4 */
+}
+
+/* Specific widths and paddings for each column */
+.footer-spacer-left { width: 12%; }
+.footer-customer-service { width: 32%; padding-left: 0.75rem; } /* From: w-[32%] pl-3 */
+.footer-office-address { width: 23%; padding-left: 0.5rem; }   /* From: w-[23%] pl-2 */
+.footer-business-hours { width: 29%; padding-left: 0.5rem; }  /* From: w-[29%] pl-2 */
+.footer-spacer-right { width: 4%; }
+
+/* Styling for the headings (h3) */
+.footer-heading {
+  font-size: 1.25rem;      /* From: text-xl */
+  font-weight: 700;        /* From: font-bold */
+  color: #1f2937;          /* From: text-gray-800 */
+  border-left: 2px solid #e5e7eb; /* From: border-l-2 (color is a standard gray) */
+  padding-left: 0.5rem;    /* From: pl-2 */
+  margin: 0;
+}
+
+/* Container for the contact links */
+.footer-links-container {
+  display: flex;           /* From: flex */
+  gap: 2rem;               /* From: gap-8 */
+}
+
+/* Styling for the group of links */
+.footer-links {
+  display: flex;           /* From: flex */
+  flex-direction: column;  /* From: flex-col */
+  gap: 0.5rem;             /* From: gap-2 */
+  color: #4b5563;          /* From: text-gray-600 */
+}
+
+/* Styling for the links themselves */
+.footer-links a {
+  color: inherit; /* Ensures the link takes the color of its parent */
+  text-decoration: none; /* A common practice for footer links */
+  transition: color 0.2s ease-in-out; /* Adds a smooth color change on hover */
+}
+
+/* Hover effect for the links */
+.footer-links a:hover {
+  color: #111827;          /* From: hover:text-gray-900 */
+}
+
+/* Styling for the address and hours text blocks */
+.footer-text-group {
+  display: flex;           /* From: flex */
+  flex-direction: column;  /* From: flex-col */
+  gap: 0.25rem;            /* From: gap-1 */
+  color: #4b5563;          /* From: text-gray-600 */
+}
+
+/* Tailwind resets margins on paragraphs, so we should do the same */
+.footer-text-group p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+
+  /* 1. Change the main container to stack columns vertically */
+  .footer-content {
+    flex-direction: column; /* Stack items vertically instead of in a row */
+    align-items: center;    /* Center the stacked columns horizontally */
+    gap: 2.5rem;            /* Increase the space between the stacked items */
+  }
+
+  /* 2. Make each content column take up more width and center its text */
+  .footer-column {
+    width: 90%;             /* Allow each column to be much wider */
+    max-width: 400px;       /* But not too wide on a tablet */
+    text-align: center;     /* Center the text content within each column */
+    padding-left: 0;        /* Remove the desktop-specific left padding */
+  }
+
+  /* 3. Adjust the headings for a vertical layout */
+  .footer-heading {
+    border-left: none;              /* Remove the vertical border on the side */
+    padding-left: 0;                /* Remove the side padding */
+    border-bottom: 2px solid #e5e7eb; /* Add a horizontal border underneath instead */
+    padding-bottom: 0.75rem;        /* Add some space below the heading text */
+  }
+
+  /* 4. Center the block of contact links */
+  .footer-links-container {
+    justify-content: center; /* Centers the links block within its container */
+  }
+
+  /* 5. Hide the empty spacer columns, as they are not needed on mobile */
+  .footer-spacer-left,
+  .footer-spacer-right {
+    display: none;
+  }
+}
+
+/* NEW: Styles for Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.pagination-button {
+  background-color: transparent;
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.pagination-button:hover:not(:disabled) {
+  background-color: #3b82f6;
+  color: white;
+}
+.pagination-button:disabled {
+  border-color: #9ca3af;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.pagination-info {
+  color: #4b5563;
+  font-weight: 500;
+}
 </style>
