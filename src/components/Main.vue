@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { get } from 'aws-amplify/api';
 import dnbLogo from '@/assets/dnb-logo.svg';
 
@@ -474,7 +474,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 /* --- Typography --- */
 .headings { color: #1e3a8a; }
-.title { font-size: 3.5rem; font-weight: 800; margin: 0; background: linear-gradient(to right, #13293d, #006494, #87bfff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
+.title { font-size: 3.5rem; font-weight: 800; margin: 0; background: linear-gradient(to right, #219ebc, #006494); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
 .subtitle { font-size: 1.5rem; font-weight: 400; margin-top: 10px; color: #374151; }
 
 /* --- Unified Search Box --- */
