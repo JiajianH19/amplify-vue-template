@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { get } from 'aws-amplify/api';
-import dnbLogo from '@/assets/dnb-logo.svg';
+import dnbLogo from '@/assets/sccb-logo.png';
 
 // --- Interfaces and Type Guards ---
 interface BusinessData {
@@ -266,8 +266,8 @@ async function getCompanyDetailsByUen(uen: string) {
     <div class="content-wrapper">
       <Transition name="fade-slide">
         <div v-if="showHeadings" class="headings">
-          <h1 class="title">BizFinder</h1>
-          <h2 class="subtitle">Find Business Information Instantly.</h2>
+          <h1 class="title">SCCBLeads</h1>
+          <h2 class="subtitle">Find <span class="subtitle-color-contrast">Business</span> Information Instantly.</h2>
         </div>
       </Transition>
 
@@ -485,13 +485,14 @@ async function getCompanyDetailsByUen(uen: string) {
 <style>
 /* --- Base and Layout --- */
 body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-.hero-container { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden; background: linear-gradient(to bottom right, #EEF2FF, #EFF6FF, #ECFEFF); }
+.hero-container { position: relative; min-height: 100vh; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; overflow: hidden;  }
 
 .page-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(to bottom right, #EEF2FF, #EFF6FF, #ECFEFF);
+  background: linear-gradient(to bottom, #FFFFFF, #FFFFFF, #FFFFFF);
+
 }
 
 .page-header {
@@ -520,8 +521,9 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 /* --- Typography --- */
 .headings { color: #1e3a8a; }
-.title { font-size: 3.5rem; font-weight: 800; margin: 0; background: linear-gradient(to right, #219ebc, #006494); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
+.title { font-size: 3.5rem; font-weight: 800; margin: 0; background: #FB4141; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
 .subtitle { font-size: 1.5rem; font-weight: 400; margin-top: 10px; color: #374151; }
+.subtitle-color-contrast {color: #FB4141; font-weight:900}
 
 /* --- Unified Search Box --- */
 .search-box-unified {
@@ -536,7 +538,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
   border-radius: 50px;
   transition: border-color 0.2s;
 }
-.search-box-unified:focus-within { border-color: #8dc6ff; }
+.search-box-unified:focus-within { border-color: #F15A59; }
 .custom-dropdown { position: relative; flex-shrink: 0; }
 .dropdown-toggle { background: transparent; border: none; border-right: 1px solid rgba(0, 0, 0, 0.1); background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em 1.2em; padding: 15px 45px 15px 20px; font-size: 1.1rem; font-family: inherit; outline: none; color: #1f2937; cursor: pointer; text-align: left; }
 .text-input-unified {
@@ -552,9 +554,9 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 }
 custom-dropdown { position: relative; flex-shrink: 0; }
 .text-input-unified::placeholder { color: #6b7280; }
-.dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 100%; list-style: none; padding: 8px; margin: 0; z-index: 10; border-radius: 12px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); background: rgba(255, 255, 255, 0.7); }
+.dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; width: 100%; list-style: none; padding: 8px; margin: 0; z-index: 10; border-radius: 12px; overflow: hidden; backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15); background: rgba(255, 255, 255, 1); }
 .dropdown-item { padding: 10px 15px; cursor: pointer; border-radius: 8px; transition: background-color 0.2s ease; color: #1f2937; }
-.dropdown-item:hover { background-color: rgba(59, 130, 246, 0.1); }
+.dropdown-item:hover { background-color: #FEF2F4; }
 
 /* --- Other Buttons and Containers --- */
 .search-icon-button {
@@ -613,7 +615,7 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   transition: background-color 0.2s ease;
 }
 .company-list-item:hover {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: #FEF2F4;
 }
 .company-list-item:last-child {
   border-bottom: none;
@@ -628,12 +630,12 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 .details-heading {
   margin-top: 0;
   font-size: 1.25rem;
-  color: #1e3a8a;
+  color: #FB4141;
 }
 
 /* --- Animations --- */
 .loading-spinner-container { margin-top: 20px; display:flex; justify-content: center;}
-.spinner-outer { width: 40px; height: 40px; border: 4px solid rgba(0, 0, 0, 0.1); border-top-color: #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+.spinner-outer { width: 40px; height: 40px; border: 4px solid rgba(0, 0, 0, 0.1); border-top-color: #F15A59; border-radius: 50%; animation: spin 1s linear infinite; }
 /* NEW: Add these styles for the new blobs container */
 .blobs-container {
   position: absolute;
@@ -699,7 +701,7 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   font-size: 1.25rem;      /* From: text-xl */
   font-weight: 700;        /* From: font-bold */
   color: #1f2937;          /* From: text-gray-800 */
-  border-left: 2px solid #e5e7eb; /* From: border-l-2 (color is a standard gray) */
+  border-left: 2px solid #F15A59; /* From: border-l-2 (color is a standard gray) */
   padding-left: 0.5rem;    /* From: pl-2 */
   margin: 0;
 }
@@ -764,7 +766,7 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   .footer-heading {
     border-left: none;              /* Remove the vertical border on the side */
     padding-left: 0;                /* Remove the side padding */
-    border-bottom: 2px solid #e5e7eb; /* Add a horizontal border underneath instead */
+    border-bottom: 2px solid #F15A59; /* Add a horizontal border underneath instead */
     padding-bottom: 0.75rem;        /* Add some space below the heading text */
   }
 
