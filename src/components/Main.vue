@@ -536,7 +536,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('@/assets/header-background.png') no-repeat top / cover;
+  background: url('@/assets/header-background.jpg') no-repeat top / cover;
   opacity: 0.5; /* Opacity ONLY lives here */
   z-index: -1;  /* This pushes it to the back */
 }
