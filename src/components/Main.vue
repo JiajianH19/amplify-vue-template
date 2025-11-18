@@ -55,6 +55,11 @@ const isMultipleCompanyResponse = (data: unknown): data is MultipleCompanyRespon
 
 
 // --- Component State ---
+// NEW: State for Toast Notification
+const showNotification = ref(false);
+const notificationMessage = ref('');
+let notificationTimer: number | null = null; // To hold the timer ID
+
 const searchType = ref<'UEN' | 'NAME' | 'SSIC'>('UEN');
 const searchText = ref('');
 // MODIFIED: Updated the type to use the new wrapper
@@ -207,6 +212,8 @@ async function search() {
     }
   } finally {
     isLoading.value = false;
+    // NEW: Trigger the notification after every search completes
+    triggerNotification('For comprehensive business reports, please contact us.');
   }
 }
 
@@ -243,6 +250,22 @@ async function getCompanyDetailsByUen(uen: string) {
   } finally {
     isLoadingDetails.value = false;
   }
+}
+
+// NEW: Function to show the notification for a set duration
+function triggerNotification(message: string) {
+  // If a notification is already showing, clear its timer to reset it
+  if (notificationTimer) {
+    clearTimeout(notificationTimer);
+  }
+
+  notificationMessage.value = message;
+  showNotification.value = true;
+
+  // Set a timer to hide the notification after 3.5 seconds
+  notificationTimer = window.setTimeout(() => {
+    showNotification.value = false;
+  }, 3500);
 }
 </script>
 
@@ -480,6 +503,13 @@ async function getCompanyDetailsByUen(uen: string) {
     </div>
   </footer>
   </div>
+
+  <!-- NEW: Toast Notification -->
+  <Transition name="toast-fade">
+    <div v-if="showNotification" class="toast-notification">
+      {{ notificationMessage }}
+    </div>
+  </Transition>
 </template>
 
 <style>
@@ -517,7 +547,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 /* --- Logo --- */
 /* .logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; } */
-.logo-image { height: 35px; width: auto; }
+.logo-image { height: 70px; width: auto; }
 
 /* --- Typography --- */
 .headings { color: #1e3a8a; }
@@ -656,7 +686,7 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 /* --- Responsive Styles --- */
 @media (max-width: 768px) {
   .logo-container { top: 1.5rem; right: 1.5rem; }
-  .logo-image { height: 28px; }
+  .logo-image { height: 30px; }
   .company-list-header, .company-list-item {
     grid-template-columns: 1fr;
     gap: 5px;
@@ -833,6 +863,34 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 */
 .fade-slide-enter-from,
 .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* NEW: Styles for Toast Notification */
+.toast-notification {
+  position: fixed; /* Stays in place even when scrolling */
+  top: 1.5rem;     /* 24px from the top */
+  right: 1.5rem;    /* 24px from the right */
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #1f2937;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1000; /* Ensures it's on top of other content */
+  font-weight: 500;
+}
+
+/* NEW: Vue Transition classes for the toast */
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.toast-fade-enter-from,
+.toast-fade-leave-to {
   opacity: 0;
   transform: translateY(-20px);
 }
