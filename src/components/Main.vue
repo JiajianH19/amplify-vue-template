@@ -333,8 +333,12 @@ function handleNotificationClick(event: MouseEvent) {
         <div class="spinner-outer"></div>
       </div>
 
-      <div v-if="!isLoading && (errorMessage || searchResults || selectedCompanyDetails)" class="results-container-glass">
-        <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
+      <div 
+        v-if="!isLoading && (errorMessage || searchResults || selectedCompanyDetails)" 
+        class="results-container-glass"
+        :class="{ 'is-blurred': showNotification }"
+      >        
+      <div v-if="errorMessage" class="message error">{{ errorMessage }}</div>
         
         <!-- NEW STRUCTURE: START -->
 
@@ -502,12 +506,6 @@ function handleNotificationClick(event: MouseEvent) {
       <div class="footer-column footer-spacer-right"></div>
     </div>
   </footer>
-  </div>
-
-<Transition name="backdrop-fade">
-  <!-- NEW: This is the backdrop element -->
-  <div v-if="showNotification" class="toast-backdrop"></div>
-</Transition>
 
   <!-- MODIFIED: Toast Notification with Close Button -->
   <Transition name="toast-fade">
@@ -516,11 +514,12 @@ function handleNotificationClick(event: MouseEvent) {
       <span v-html="notificationMessage"></span>
       
       <!-- ADD THIS BUTTON -->
-      <button @click="showNotification = false" class="toast-close-button">
-        &times; <!-- This is the HTML entity for a multiplication sign '×' -->
+      <button @click.stop="showNotification = false" class="toast-close-button">
+        &times;
       </button>
     </div>
   </Transition>
+  </div>
 </template>
 
 <style>
@@ -1013,34 +1012,13 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   opacity: 0.8; /* Slightly fade on hover */
 }
 
-.toast-backdrop {
-  position: fixed; /* Cover the entire viewport */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  
-  /* Semi-transparent black background */
-  background-color: rgba(17, 24, 39, 0.4); /* A dark gray with 40% opacity */
-  
-  /* The "glass" blur effect for content behind it */
-  backdrop-filter: blur(4px);
-  
-  /* 
-    Crucial z-index: It must be below the notification (1000)
-    but above everything else on the page.
-  */
-  z-index: 999; 
-}
-
-/* NEW: Transition classes for the backdrop fade effect */
-.backdrop-fade-enter-active,
-.backdrop-fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.backdrop-fade-enter-from,
-.backdrop-fade-leave-to {
-  opacity: 0;
+/* NEW: Class to apply blur/opacity effect to an element */
+.is-blurred {
+  filter: blur(4px);
+  opacity: 0.6;
+  /* This prevents the user from clicking on the results behind the modal */
+  pointer-events: none;
+  /* Add a transition for a smooth effect */
+  transition: filter 0.3s ease, opacity 0.3s ease;
 }
 </style>
