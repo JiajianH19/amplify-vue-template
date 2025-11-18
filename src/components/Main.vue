@@ -333,18 +333,16 @@ function handleNotificationClick(event: MouseEvent) {
         <div class="spinner-outer"></div>
       </div>
 
-        <!-- MODIFIED: Toast Notification with Close Button -->
+      <Teleport to="body">
         <Transition name="toast-fade">
           <div v-if="showNotification" class="toast-notification" @click="handleNotificationClick">
-            <!-- Message is now in a span for better layout control -->
             <span v-html="notificationMessage"></span>
-            
-            <!-- ADD THIS BUTTON -->
             <button @click.stop="showNotification = false" class="toast-close-button">
               &times;
             </button>
           </div>
         </Transition>
+      </Teleport>
 
       <div 
         v-if="!isLoading && (errorMessage || searchResults || selectedCompanyDetails)" 
