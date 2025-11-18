@@ -333,6 +333,19 @@ function handleNotificationClick(event: MouseEvent) {
         <div class="spinner-outer"></div>
       </div>
 
+        <!-- MODIFIED: Toast Notification with Close Button -->
+        <Transition name="toast-fade">
+          <div v-if="showNotification" class="toast-notification" @click="handleNotificationClick">
+            <!-- Message is now in a span for better layout control -->
+            <span v-html="notificationMessage"></span>
+            
+            <!-- ADD THIS BUTTON -->
+            <button @click.stop="showNotification = false" class="toast-close-button">
+              &times;
+            </button>
+          </div>
+        </Transition>
+
       <div 
         v-if="!isLoading && (errorMessage || searchResults || selectedCompanyDetails)" 
         class="results-container-glass"
@@ -507,18 +520,6 @@ function handleNotificationClick(event: MouseEvent) {
     </div>
   </footer>
 
-  <!-- MODIFIED: Toast Notification with Close Button -->
-  <Transition name="toast-fade">
-    <div v-if="showNotification" class="toast-notification" @click="handleNotificationClick">
-      <!-- Message is now in a span for better layout control -->
-      <span v-html="notificationMessage"></span>
-      
-      <!-- ADD THIS BUTTON -->
-      <button @click.stop="showNotification = false" class="toast-close-button">
-        &times;
-      </button>
-    </div>
-  </Transition>
   </div>
 </template>
 
@@ -973,6 +974,8 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 
 /* NEW: Styles for the close button */
 .toast-close-button {
+  position: relative; /* Establishes a stacking context */
+  z-index: 2;         /* Lifts the button to a higher layer */
   background: transparent;
   border: none;
   padding: 0;
