@@ -213,7 +213,7 @@ async function search() {
   } finally {
     isLoading.value = false;
     // NEW: Trigger the notification after every search completes
-    triggerNotification('For comprehensive business reports, please contact us.');
+    triggerNotification('For detailed reports on any of these companies, please contact us.');
   }
 }
 
@@ -381,7 +381,7 @@ function triggerNotification(message: string) {
         <!-- VIEW 2: INITIAL SEARCH RESULTS (List, SSIC, or Single UEN) -->
         <!-- This block is checked SECOND, only if the details view is not active. -->
         <div v-else-if="searchResults">
-          <h3>Search Result</h3>
+          <h3 class="search-result-header-color">Search Result</h3>
 
           <!-- SSIC Result Display -->
           <ul v-if="'SSIC' in searchResults.data" class="results-list">
@@ -554,6 +554,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .title { font-size: 3.5rem; font-weight: 800; margin: 0; background: #FB4141; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
 .subtitle { font-size: 1.5rem; font-weight: 400; margin-top: 10px; color: #374151; }
 .subtitle-color-contrast {color: #FB4141; font-weight:900}
+.search-result-header-color {color: #FB4141}
 
 /* --- Unified Search Box --- */
 .search-box-unified {
