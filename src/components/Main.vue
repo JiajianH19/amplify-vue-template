@@ -334,14 +334,18 @@ function handleNotificationClick(event: MouseEvent) {
       </div>
 
       <Teleport to="body">
-        <Transition name="toast-fade">
-          <div v-if="showNotification" class="toast-notification" @click="handleNotificationClick">
-            <span v-html="notificationMessage"></span>
-            <button @click.stop="showNotification = false" class="toast-close-button">
-              &times;
-            </button>
-          </div>
-        </Transition>
+        <!-- NEW WRAPPER DIV -->
+        <div v-if="showNotification" class="toast-wrapper">
+          <Transition name="toast-fade">
+            <!-- NOTE: the v-if is now on the wrapper, not the notification itself -->
+            <div class="toast-notification" @click="handleNotificationClick">
+              <span v-html="notificationMessage"></span>
+              <button @click.stop="showNotification = false" class="toast-close-button">
+                &times;
+              </button>
+            </div>
+          </Transition>
+        </div>
       </Teleport>
 
       <div 
@@ -906,18 +910,27 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   transform: translateY(-20px);
 }
 
+/* NEW: Flexbox wrapper to force centering */
+.toast-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Make it sit on top of everything, but below the toast if needed */
+  z-index: 999; 
+  /* Prevent clicks on the wrapper itself */
+  pointer-events: none; 
+}
+
 /* MODIFIED: Styles for Centered Toast Notification */
 .toast-notification {
   /* Positioning and Stacking Context */
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 1000;
-  
-  /* NEW: For positioning the corner borders */
-  position: relative; /* Note: It's okay to have 'fixed' and 'relative' here */
-  overflow: hidden;
+  pointer-events: auto; /* Re-enable clicks on the notification */
 
   /* Layout */
   display: flex;
