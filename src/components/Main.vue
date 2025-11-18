@@ -257,6 +257,15 @@ function triggerNotification(message: string) {
   notificationMessage.value = message;
   showNotification.value = true;
 }
+
+function handleNotificationClick(event: MouseEvent) {
+  // We check if the element that was clicked is an <a> tag.
+  // The 'as HTMLElement' is a type assertion to help TypeScript.
+  if ((event.target as HTMLElement).tagName === 'A') {
+    // If it is, we hide the notification.
+    showNotification.value = false;
+  }
+}
 </script>
 
 <template>
@@ -495,9 +504,14 @@ function triggerNotification(message: string) {
   </footer>
   </div>
 
+<Transition name="backdrop-fade">
+  <!-- NEW: This is the backdrop element -->
+  <div v-if="showNotification" class="toast-backdrop"></div>
+</Transition>
+
   <!-- MODIFIED: Toast Notification with Close Button -->
   <Transition name="toast-fade">
-    <div v-if="showNotification" class="toast-notification">
+    <div v-if="showNotification" class="toast-notification" @click="handleNotificationClick">
       <!-- Message is now in a span for better layout control -->
       <span v-html="notificationMessage"></span>
       
@@ -963,5 +977,36 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 
 .toast-notification a:hover {
   opacity: 0.8; /* Slightly fade on hover */
+}
+
+.toast-backdrop {
+  position: fixed; /* Cover the entire viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* Semi-transparent black background */
+  background-color: rgba(17, 24, 39, 0.4); /* A dark gray with 40% opacity */
+  
+  /* The "glass" blur effect for content behind it */
+  backdrop-filter: blur(4px);
+  
+  /* 
+    Crucial z-index: It must be below the notification (1000)
+    but above everything else on the page.
+  */
+  z-index: 999; 
+}
+
+/* NEW: Transition classes for the backdrop fade effect */
+.backdrop-fade-enter-active,
+.backdrop-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.backdrop-fade-enter-from,
+.backdrop-fade-leave-to {
+  opacity: 0;
 }
 </style>
