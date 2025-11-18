@@ -213,7 +213,7 @@ async function search() {
   } finally {
     isLoading.value = false;
     // NEW: Trigger the notification after every search completes
-    triggerNotification('For detailed reports on any of these companies, please contact us.');
+    triggerNotification('For detailed reports on any of these companies, please <a href="https://sccb.com.sg/contact-us/" target="_blank" rel="noopener noreferrer">contact us</a>.');
   }
 }
 
@@ -252,20 +252,10 @@ async function getCompanyDetailsByUen(uen: string) {
   }
 }
 
-// NEW: Function to show the notification for a set duration
+// MODIFIED: Function to show the persistent notification
 function triggerNotification(message: string) {
-  // If a notification is already showing, clear its timer to reset it
-  if (notificationTimer) {
-    clearTimeout(notificationTimer);
-  }
-
   notificationMessage.value = message;
   showNotification.value = true;
-
-  // Set a timer to hide the notification after 3.5 seconds
-  notificationTimer = window.setTimeout(() => {
-    showNotification.value = false;
-  }, 3500);
 }
 </script>
 
@@ -471,9 +461,10 @@ function triggerNotification(message: string) {
         <h3 class="footer-heading">Customer Service & Support</h3>
         <div class="footer-links-container">
           <div class="footer-links">
-            <a href="tel:+6564396608">(+65) 6439 6608</a>
+            <a href="tel:+6564396603">(+65) 6439 6603</a>
             <a href="tel:+6565656161">(+65) 6565 6161</a>
             <a href="mailto:csc@sccb.com.sg">csc@sccb.com.sg</a>
+            <a href="https://sccb.com.sg/contact-us/">Contact us</a>
           </div>
         </div>
       </div>
@@ -504,10 +495,16 @@ function triggerNotification(message: string) {
   </footer>
   </div>
 
-  <!-- NEW: Toast Notification -->
+  <!-- MODIFIED: Toast Notification with Close Button -->
   <Transition name="toast-fade">
     <div v-if="showNotification" class="toast-notification">
-      {{ notificationMessage }}
+      <!-- Message is now in a span for better layout control -->
+      <span v-html="notificationMessage"></span>
+      
+      <!-- ADD THIS BUTTON -->
+      <button @click="showNotification = false" class="toast-close-button">
+        &times; <!-- This is the HTML entity for a multiplication sign '×' -->
+      </button>
     </div>
   </Transition>
 </template>
@@ -528,6 +525,30 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .page-header {
   padding: 2rem 0 0 2.5rem;
   flex-shrink: 0;
+  position: relative; 
+  z-index: 1;
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('@/assets/header-background.png') no-repeat top / cover;
+  opacity: 0.5; /* Opacity ONLY lives here */
+  z-index: -1;  /* This pushes it to the back */
+}
+
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* Adjust the height of the fade here */
+  background: linear-gradient(to top, #ffffff, rgba(255, 255, 255, 0));
 }
 
 /* MODIFIED: Replaced .hero-container with .main-content */
@@ -548,6 +569,11 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 /* --- Logo --- */
 /* .logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; } */
 .logo-image { height: 70px; width: auto; }
+.logo-container {
+  /* Add these two lines */
+  position: relative;
+  z-index: 1; /* This ensures it's on a higher "layer" than the ::before element */
+}
 
 /* --- Typography --- */
 .headings { color: #1e3a8a; }
@@ -868,11 +894,25 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   transform: translateY(-20px);
 }
 
-/* NEW: Styles for Toast Notification */
+/* MODIFIED: Styles for Centered Toast Notification */
 .toast-notification {
-  position: fixed; /* Stays in place even when scrolling */
-  top: 1.5rem;     /* 24px from the top */
-  right: 1.5rem;    /* 24px from the right */
+  position: fixed;
+  /* Centering styles */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  /* Layout for message and close button */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem; /* Adds space between message and button */
+  
+  /* Sizing */
+  width: 90%;
+  max-width: 500px;
+  
+  /* Existing styles */
   background-color: rgba(255, 255, 255, 0.9);
   color: #1f2937;
   padding: 1rem 1.5rem;
@@ -880,8 +920,25 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.05);
-  z-index: 1000; /* Ensures it's on top of other content */
+  z-index: 1000;
   font-weight: 500;
+}
+
+/* NEW: Styles for the close button */
+.toast-close-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1.75rem; /* Makes the '×' larger and easier to click */
+  line-height: 1;
+  color: #6b7280;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.toast-close-button:hover {
+  color: #1f2937; /* Darker on hover */
 }
 
 /* NEW: Vue Transition classes for the toast */
@@ -894,5 +951,17 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 .toast-fade-leave-to {
   opacity: 0;
   transform: translateY(-20px);
+}
+
+/* NEW: Style for the link inside the toast notification */
+.toast-notification a {
+  color: #FB4141; /* Your primary brand red */
+  font-weight: 600;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.toast-notification a:hover {
+  opacity: 0.8; /* Slightly fade on hover */
 }
 </style>
