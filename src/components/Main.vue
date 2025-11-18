@@ -910,32 +910,66 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 
 /* MODIFIED: Styles for Centered Toast Notification */
 .toast-notification {
+  /* Positioning and Stacking Context */
   position: fixed;
-  /* Centering styles */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
   
-  /* Layout for message and close button */
+  /* NEW: For positioning the corner borders */
+  position: relative; /* Note: It's okay to have 'fixed' and 'relative' here */
+  overflow: hidden;
+
+  /* Layout */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem; /* Adds space between message and button */
+  gap: 1.5rem;
   
-  /* Sizing */
+  /* MODIFIED Sizing */
   width: 90%;
-  max-width: 500px;
+  max-width: 600px;
+  min-height: 40px;
   
-  /* Existing styles */
+  /* Appearance */
   background-color: rgba(255, 255, 255, 0.9);
   color: #1f2937;
   padding: 1rem 1.5rem;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  z-index: 1000;
+  /* The default border is no longer needed, you can remove it or keep it */
+  border: 1px solid rgba(0, 0, 0, 0.05); 
   font-weight: 500;
+}
+
+/* --- Styles for Custom Corner Borders on Toast --- */
+
+/* Top-Left Corner Border */
+.toast-notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px; 
+  height: 40px;
+  border-top: 3px solid #FB4141;
+  border-left: 3px solid #FB4141;
+  border-top-left-radius: 8px;
+}
+
+/* Bottom-Right Corner Border */
+.toast-notification::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-bottom: 3px solid #FB4141;
+  border-right: 3px solid #FB4141;
+  border-bottom-right-radius: 8px;
 }
 
 /* NEW: Styles for the close button */
