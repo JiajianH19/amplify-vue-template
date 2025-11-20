@@ -607,15 +607,15 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 .contact-us-link {
   /* --- Button Appearance --- */
-  background-color: #FEF2F4; /* Light red background by default */
-  border: 1px solid #FB4141; /* Brand red border by default */
+  background-color: white; /* Light red background by default */
+  border: 0.5px solid #FB4141; /* Brand red border by default */
   color: #FB4141; /* Brand red text color by default */
   
   /* --- Layout & Typography --- */
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1rem; /* Slightly smaller to fit nicely in a button */
-  padding: 10px 20px; /* Adjust padding for a good button shape */
+  padding: 5px 10px; /* Adjust padding for a good button shape */
   border-radius: 50px; /* Pill-shaped button */
   
   /* --- Effects --- */
