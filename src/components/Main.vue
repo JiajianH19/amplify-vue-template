@@ -606,18 +606,28 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 }
 
 .contact-us-link {
-  color: #1f2937; /* A dark, professional text color */
+  /* --- Button Appearance --- */
+  background-color: #FEF2F4; /* Light red background by default */
+  border: 2px solid #FB4141; /* Brand red border by default */
+  color: #FB4141; /* Brand red text color by default */
+  
+  /* --- Layout & Typography --- */
   text-decoration: none;
-  font-weight: 600; /* Makes it stand out slightly */
-  font-size: 1.1rem;
-  padding: 8px 16px; /* Gives it a larger clickable area */
-  border-radius: 20px; /* For a soft background on hover */
-  transition: all 0.2s ease; /* Smooth hover effect */
+  font-weight: 600;
+  font-size: 1rem; /* Slightly smaller to fit nicely in a button */
+  padding: 10px 20px; /* Adjust padding for a good button shape */
+  border-radius: 50px; /* Pill-shaped button */
+  
+  /* --- Effects --- */
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
 }
 
 .contact-us-link:hover {
-  color: #FB4141; /* Changes text to your brand's red on hover */
-  background-color: #FEF2F4; /* Adds a light red background on hover */
+  background-color: #FB4141; /* Fill with brand red on hover */
+  color: #ffffff; /* Make text white for contrast */
+  transform: translateY(-2px); /* Slight lift effect on hover */
+  box-shadow: 0 4px 8px rgba(251, 65, 65, 0.2); /* Add a red glow on hover */
 }
 
 /* --- Typography --- */
