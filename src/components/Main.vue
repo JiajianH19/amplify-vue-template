@@ -274,6 +274,12 @@ function handleNotificationClick(event: MouseEvent) {
       <div class="logo-container">
         <img :src="dnbLogo" alt="Dun & Bradstreet Logo" class="logo-image" />
       </div>
+
+      <nav class="header-nav">
+        <a href="https://sccb.com.sg/contact-us/" target="_blank" rel="noopener noreferrer" class="contact-us-link">
+          Contact Us
+        </a>
+      </nav>
     </header>
 
     <main class="main-content">
@@ -539,10 +545,13 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 }
 
 .page-header {
-  padding: 2rem 0 0 2.5rem;
+  padding: 2rem 2.5rem; /* Symmetrical padding for better alignment */
   flex-shrink: 0;
   position: relative; 
   z-index: 1;
+  display: flex; /* ADDED: Turns the header into a flex container */
+  justify-content: space-between; /* ADDED: Pushes logo left, link right */
+  align-items: center; /* ADDED: Vertically aligns logo and link */
 }
 
 .page-header::before {
@@ -589,6 +598,26 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
   /* Add these two lines */
   position: relative;
   z-index: 1; /* This ensures it's on a higher "layer" than the ::before element */
+}
+
+.header-nav {
+  position: relative;
+  z-index: 1; /* Ensures it sits above the background pseudo-element */
+}
+
+.contact-us-link {
+  color: #1f2937; /* A dark, professional text color */
+  text-decoration: none;
+  font-weight: 600; /* Makes it stand out slightly */
+  font-size: 1.1rem;
+  padding: 8px 16px; /* Gives it a larger clickable area */
+  border-radius: 20px; /* For a soft background on hover */
+  transition: all 0.2s ease; /* Smooth hover effect */
+}
+
+.contact-us-link:hover {
+  color: #FB4141; /* Changes text to your brand's red on hover */
+  background-color: #FEF2F4; /* Adds a light red background on hover */
 }
 
 /* --- Typography --- */
