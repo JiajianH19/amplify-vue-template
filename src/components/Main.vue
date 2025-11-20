@@ -591,10 +591,9 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .content-wrapper { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 25px; width: 100%; max-width: 800px; text-align: center; }
 
 
-/* --- Logo --- */
 /* .logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; } */
 .logo-image { height: 70px; width: auto; }
-.logo-container {
+.logo-container { 
   /* Add these two lines */
   position: relative;
   z-index: 1; /* This ensures it's on a higher "layer" than the ::before element */
@@ -607,14 +606,14 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 .contact-us-link {
   /* --- Button Appearance --- */
-  background-color: white; /* Light red background by default */
+  background-color: #ffffff; /* Light red background by default */
   border: 0.5px solid #FB4141; /* Brand red border by default */
   color: #FB4141; /* Brand red text color by default */
   
   /* --- Layout & Typography --- */
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 1rem; /* Slightly smaller to fit nicely in a button */
+  text-decoration: none ;
+  font-weight: 450;
+  font-size: 2rem; 
   padding: 5px 10px; /* Adjust padding for a good button shape */
   border-radius: 50px; /* Pill-shaped button */
   
