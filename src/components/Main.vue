@@ -294,7 +294,7 @@ function handleNotificationClick(event: MouseEvent) {
     <div class="content-wrapper">
       <Transition name="fade-slide">
         <div v-if="showHeadings" class="headings">
-          <h1 class="title">SCCBLeads</h1>
+          <h1 class="title">Data Vault</h1>
           <h2 class="subtitle">Find <span class="subtitle-color-contrast">Business</span> Information Instantly.</h2>
         </div>
       </Transition>
@@ -608,7 +608,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 .contact-us-link {
   /* --- Button Appearance --- */
   background-color: #FEF2F4; /* Light red background by default */
-  border: 2px solid #FB4141; /* Brand red border by default */
+  border: 1px solid #FB4141; /* Brand red border by default */
   color: #FB4141; /* Brand red text color by default */
   
   /* --- Layout & Typography --- */
