@@ -1,7 +1,6 @@
 import { defineBackend } from '@aws-amplify/backend';
 import { Stack } from 'aws-cdk-lib';
 
-// const API_URL = 'https://3o8woigknc.execute-api.ap-southeast-1.amazonaws.com/dev';
 const API_URL = 'https://w9lnsset37.execute-api.ap-southeast-1.amazonaws.com/prod';
 
 // Validate API URL format
