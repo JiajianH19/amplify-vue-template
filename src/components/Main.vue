@@ -796,10 +796,10 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 }
 
 /* Specific widths and paddings for each column */
-.footer-spacer-left { width: 12%; }
-.footer-customer-service { width: 32%; padding-left: 0.75rem; } /* From: w-[32%] pl-3 */
-.footer-office-address { width: 23%; padding-left: 0.5rem; }   /* From: w-[23%] pl-2 */
-.footer-business-hours { width: 29%; padding-left: 0.5rem; }  /* From: w-[29%] pl-2 */
+.footer-spacer-left { width: 8%; }
+.footer-customer-service { width: 32%; padding-left: 0.7rem; }
+.footer-office-address { width: 23%; padding-left: 0.8rem; }  
+.footer-business-hours { width: 29%; padding-left: 0.9rem; }  
 .footer-spacer-right { width: 4%; }
 
 /* Styling for the headings (h3) */
