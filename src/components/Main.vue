@@ -593,7 +593,7 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 
 /* .logo-container { position: absolute; top: 2rem; left: 2.5rem; z-index: 10; } */
-.logo-image { height: 70px; width: auto; }
+.logo-image { height: 60px; width: auto; }
 .logo-container { 
   /* Add these two lines */
   position: relative;
