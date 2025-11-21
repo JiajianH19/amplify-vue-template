@@ -289,6 +289,7 @@ function handleNotificationClick(event: MouseEvent) {
         <div class="blob blob1"></div>
         <div class="blob blob2"></div>
         <div class="blob blob3"></div>
+        <div class="blob blob4"></div>
       </div>
 
     <div class="content-wrapper">
@@ -612,9 +613,9 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
   
   /* --- Layout & Typography --- */
   text-decoration: none ;
-  font-weight: 450;
-  font-size: 2rem; 
-  padding: 5px 10px; /* Adjust padding for a good button shape */
+  font-weight: 500;
+  font-size: 1rem; 
+  padding: 10px 15px; /* Adjust padding for a good button shape */
   border-radius: 50px; /* Pill-shaped button */
   
   /* --- Effects --- */
@@ -758,9 +759,6 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   z-index: 1; /* Sits behind the content-wrapper */
 }
 .blob { position: absolute; border-radius: 50%; mix-blend-mode: multiply; filter: blur(70px); z-index: 1; }
-/* .blob1 { width: 250px; height: 250px; top: 15%; left: 20%; background: rgba(0, 94, 184, 0.2); animation: blob 8s infinite; }
-.blob2 { width: 300px; height: 300px; top: 30%; right: 25%; background: rgba(0, 120, 212, 0.2); animation: blob 10s infinite reverse; }
-.blob3 { width: 200px; height: 200px; bottom: 15%; left: 30%; background: rgba(0, 165, 224, 0.2); animation: blob 7s infinite; } */
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes blob { 0% { transform: translate(0px, 0px) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0px, 0px) scale(1); } }
 
@@ -782,7 +780,7 @@ custom-dropdown { position: relative; flex-shrink: 0; }
 /* General styles for the footer container */
 .footer-container {
   background-color: #ffffff; /* From: bg-white */
-  padding-top: 3rem;      /* From: py-12 */
+  padding-top: 4rem;      /* From: py-12 */
   padding-bottom: 3rem;   /* From: py-12 */
 }
 
