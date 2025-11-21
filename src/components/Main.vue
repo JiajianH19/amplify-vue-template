@@ -607,27 +607,24 @@ body { margin: 0; font-family: Avenir, Helvetica, Arial, sans-serif; -webkit-fon
 
 .contact-us-link {
   /* --- Button Appearance --- */
-  background-color: #ffffff; /* Light red background by default */
-  border: 0.5px solid #FB4141; /* Brand red border by default */
-  color: #FB4141; /* Brand red text color by default */
+  background-color: #FB4141; /* Light red background by default */
+  /*border: 0.5px solid #FB4141; /* Brand red border by default */
+
+  color: white; /* Brand red text color by default */
   
-  /* --- Layout & Typography --- */
   text-decoration: none ;
-  font-weight: 500;
-  font-size: 1rem; 
+  font-weight: 650;
+  font-size: 0.9rem; 
   padding: 10px 15px; /* Adjust padding for a good button shape */
-  border-radius: 50px; /* Pill-shaped button */
-  
-  /* --- Effects --- */
+  border-radius: 8px;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+
 }
 
 .contact-us-link:hover {
-  background-color: #FB4141; /* Fill with brand red on hover */
-  color: #ffffff; /* Make text white for contrast */
+  background-color: #E83102; /* Fill with brand red on hover */
+  color: white; /* Make text white for contrast */
   transform: translateY(-2px); /* Slight lift effect on hover */
-  box-shadow: 0 4px 8px rgba(251, 65, 65, 0.2); /* Add a red glow on hover */
 }
 
 /* --- Typography --- */
