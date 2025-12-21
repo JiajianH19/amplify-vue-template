@@ -266,6 +266,12 @@ function handleNotificationClick(event: MouseEvent) {
     showNotification.value = false;
   }
 }
+
+// --- NEW: State for Disclaimer ---
+const isDisclaimerOpen = ref(false);
+const toggleDisclaimer = () => {
+  isDisclaimerOpen.value = !isDisclaimerOpen.value;
+};
 </script>
 
 <template>
@@ -526,9 +532,92 @@ function handleNotificationClick(event: MouseEvent) {
 
       <!-- This is the empty spacer column on the right -->
       <div class="footer-column footer-spacer-right"></div>
+      
     </div>
   </footer>
 
+
+      <!-- NEW: Disclaimer Section -->
+    <div class="disclaimer-wrapper">
+      <!-- The Clickable Header Bar -->
+      <div class="disclaimer-header" @click="toggleDisclaimer">
+        <span class="disclaimer-title">Disclaimer</span>
+        <span class="disclaimer-icon" :class="{ 'is-open': isDisclaimerOpen }">
+          &#9650; <!-- Up Arrow Unicode -->
+        </span>
+      </div>
+
+      <!-- The Expandable Content -->
+      <Transition name="accordion">
+        <div v-if="isDisclaimerOpen" class="disclaimer-content">
+          <div class="disclaimer-text-container">
+             <p><strong>Data & Licence Information</strong></p>
+             <p style="text-decoration: underline; ">Data source</p>
+             <p>Contains information from datasets provided by Singapore government agencies via <a href="https://data.gov.sg" class="link-disclaimer">https://data.gov.sg</a>, updated routinely.</p>
+             <p>Data is made available under the terms of the Singapore Open Data Licence version 1.0 (<a href="https://data.gov.sg/open-data-licence" class="link-disclaimer">https://data.gov.sg/open-data-licence</a>).</p>
+             <p style="text-decoration: underline;">Disclaimer</p>
+             <p>The information is provided “as is” and “as available”. We make no representations or warranties regarding accuracy, completeness, timeliness, or fitness for any purpose.</p>
+             <p>This website is not endorsed by any Singapore government agency.</p>
+             <p><strong>Privacy Notice</strong></p>
+             <p>This website does not collect personal data from users. However, we may collect anonymous technical information (such as page views and system performance metrics) solely for operational monitoring and improvement. Other websites operated by our organisation may have different data practices - please refer to their respective privacy notices.</p>
+             <p><strong>Questions and Feedback</strong></p>
+             <p>Should you also have any questions or feedback concerning this Website, please do not hesitate to contact us at the specified contact details as below:</p>
+             <p><a href="csc@sccb.com.sg" class="link-disclaimer">csc@sccb.com.sg</a></p>
+             <p><strong>Terms of use</strong></p>
+             <p>Version: 1.0</p>
+             <p style="text-decoration: underline;" >1. Acceptance of Terms</p>
+             <p>These Terms of Use (“<strong>Terms</strong>”) govern your access to and use of this website (the “<strong>Site</strong>”) and the information, content, and services made available on or through it (collectively, the “<strong>Services</strong>”). By using the Site, you agree to be bound by these Terms. If you do not agree, please discontinue use immediately.</p>
+             <p style="text-decoration: underline;">2. About the Site</p>
+             <p>The Site provides free access to basic information sourced from datasets published by Singapore government agencies via <a href="https://data.gov.sg" class="link-disclaimer">https://data.gov.sg</a>. Such datasets are made available under the Singapore Open Data Licence version 1.0, and agree to comply with the requirements thereunder (see: <a href="https://data.gov.sg/open-data-licence" class="link-disclaimer">https://data.gov.sg/open-data-licence</a>). The Site is not affiliated with, sponsored by, or endorsed by any Singapore government agency.</p>
+             <p style="text-decoration: underline;">3. Informational Use</p>
+             <p>The Site is provided free of charge for general informational purposes only. Content on the Site does not constitute legal, financial, professional, or any other form of advice. You are solely responsible for verifying information before relying on it.</p>
+             <p style="text-decoration: underline;">4. Paid Information Outside This Site (Separate Engagements Only)</p>
+             <p>If you require additional information not available through open data, you may contact us regarding a separate paid service. Such paid services are not offered through this Site and will be governed only by a separate written agreement.</p>
+             <p style="text-decoration: underline;">5. Permitted Use</p>
+             <p>You may only use the Site for lawful purposes, including searching and viewing information for your internal use.</p>
+             <p style="text-decoration: underline;">6. Prohibited Activities</p>
+             <p>You agree that you will not:</p>
+             <p>(a) Violate any applicable laws or third-party rights.</p>
+             <p>(b) Suggest the Site, or your use of it, has official status or government endorsement.</p>
+             <p>(c) Introduce malware, attempt to gain unauthorised access, or disrupt or degrade the Site’s performance.</p>
+             <p>(d) Engage in automated scraping, harvesting, or high-volume queries that may overload or impair the Site or related data sources.</p>
+             <p>(e) Remove or alter required attribution notices or misrepresent data sources.</p>
+             <p>(f) Circumvent technical measures, access non-public areas of the Site (if any), or use any content in a way that infringes intellectual property or database rights.</p>
+             <p style="text-decoration: underline;">7. Intellectual Property (Site Elements)</p>
+             <p>Except for open data and third-party materials, all other elements of the Site, including user interface, design, layout, navigation, indexes, compilations, and explanatory
+
+content are owned by us or our licensors. You may not copy, modify, or create derivative works of these elements without our prior written consent.</p>
+             <p style="text-decoration: underline;">8. Accuracy, Completeness, and Timeliness</p>
+             <p>Information may be updated routinely and may be incomplete, incorrect, delayed, or otherwise subject to change without notice. The Site and its content are provided “as is” and “as available”. You are solely responsible for validating information before relying on it.</p>
+             <p style="text-decoration: underline;">9. Availability, Changes and Suspension</p>
+             <p>We may modify, suspend, terminate or discontinue any part of the Site or Services at any time without notice. We may block or throttle traffic that we reasonably believe degrades performance or violates these Terms. We may update these Terms periodically and continued use of the Site following changes constitutes acceptance of the updated Terms.</p>
+             <p style="text-decoration: underline;">10. Third-Party Links and Content</p>
+             <p>The Site may contain links to third-party websites or services. We are not responsible for third-party content, policies, or practices. Accessing third-party sites is at your own risk.</p>
+             <p style="text-decoration: underline;">11. Disclaimers</p>
+             <p>THE SITE AND SERVICES ARE PROVIDED “AS IS” AND “AS AVAILABLE”. TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY WARRANTIES OF ACCURACY, COMPLETENESS, TIMELINESS, AVAILABILITY, NON-INFRINGEMENT, MERCHANTABILITY, OR FITNESS FOR A PARTICULAR PURPOSE OF ANY INFORMATION OR SERVICE PROVIDED. WE DO NOT WARRANT THAT THE SITE WILL BE UNINTERRUPTED, ERROR-FREE, SECURE, OR FREE OF HARMFUL COMPONENTS.</p>
+             <p style="text-decoration: underline;">12. Limitation of Liability</p>
+             <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, WE SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE, ARISING OUT OF OR RELATED TO YOUR USE OF OR INABILITY TO USE THE SITE OR SERVICES.</p>
+             <p>SUBJECT TO APPLICABLE LAW, OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF OR RELATING TO THE SITE OR THESE TERMS SHALL NOT EXCEED SGD 100.</p>
+             <p>NOTHING IN THESE TERMS EXCLUDES OR LIMITS LIABILITY FOR DEATH OR PERSONAL INJURY CAUSED BY NEGLIGENCE TO THE EXTENT SUCH EXCLUSION OR LIMITATION IS PROHIBITED BY LAW.</p>
+             <p style="text-decoration: underline;">13. Indemnity</p>
+             <p>You agree to indemnify, defend, and hold harmless us and our officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or related to: (a) your use of the
+
+Site; (b) your violation of these Terms; or (c) your infringement of any rights of any third party.</p>
+             <p style="text-decoration: underline;">14. Governing Law and Jurisdiction</p>
+             <p>These Terms and any dispute arising out of or in connection with them or the Site are governed by the laws of Singapore. You agree to submit to the exclusive jurisdiction of the courts of Singapore.</p>
+             <p style="text-decoration: underline;">15. Severability / No Waiver</p>
+             <p>If any provision of these Terms is held invalid or unenforceable, that provision will be enforced to the maximum extent permissible, and the remaining provisions will remain in full force and effect. No waiver of any term shall be deemed a further or continuing waiver of such term or any other term.</p>
+       
+              <!-- NEW: Close Button at the bottom -->
+             <div class="disclaimer-close-container">
+               <button @click="toggleDisclaimer" class="disclaimer-close-btn">
+                 Close Disclaimer <span class="close-arrow">&#9660;</span>
+               </button>
+             </div>
+          </div>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
@@ -1067,5 +1156,148 @@ custom-dropdown { position: relative; flex-shrink: 0; }
   pointer-events: none;
   /* Add a transition for a smooth effect */
   transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* --- NEW: Disclaimer Styles --- */
+.disclaimer-wrapper {
+  width: 100%;
+  background-color: #FB4141; /* Brand Red */
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.disclaimer-header {
+  width: 100%;
+  padding: 15px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  transition: background-color 0.2s ease;
+  user-select: none; /* Prevents text highlighting on quick clicks */
+}
+
+.disclaimer-header:hover {
+  background-color: #E83102; /* Slightly darker red on hover */
+}
+
+.disclaimer-title {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.disclaimer-icon {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+/* Rotate the arrow when open */
+.disclaimer-icon.is-open {
+  transform: rotate(180deg);
+}
+
+.disclaimer-content {
+  background-color: #ffffff; /* White background for readability */
+  color: #333; /* Dark text */
+  border-top: 4px solid #FB4141; /* Visual separator */
+  overflow: hidden; /* Essential for the slide animation */
+}
+
+.disclaimer-text-container {
+  max-width: 60%; /* Keep text measure readable */
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.disclaimer-text-container p {
+  margin-bottom: 15px;
+}
+
+.disclaimer-text-container p:last-child {
+  margin-bottom: 0;
+}
+
+/* --- Vue Transition for Accordion Effect --- */
+.accordion-enter-active,
+.accordion-leave-active {
+  transition: all 0.4s ease-in-out;
+  max-height: 500px; /* Arbitrary large height */
+  opacity: 1;
+}
+
+.accordion-enter-from,
+.accordion-leave-to {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0; /* Helps smooth the collapse */
+  padding-bottom: 0;
+}
+
+pre {
+    /* Ensures a horizontal scrollbar appears when content is too wide */
+    overflow-x: auto; 
+    /* Ensures vertical content also gets a scrollbar if needed */
+    overflow-y: auto; 
+    /* Alternatively, use 'overflow: auto;' as a shorthand for both */
+}
+
+.link-disclaimer {
+  color: blue; /* Or use hex code #0000FF */
+  text-decoration: underline; /* Ensures the underline remains */
+}
+
+/* NEW: Styles for the bottom close area */
+.disclaimer-close-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.disclaimer-close-btn {
+  background-color: white;
+  color: #FB4141; /* Brand Red */
+  border: 2px solid #FB4141;
+  padding: 10px 25px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.disclaimer-close-btn:hover {
+  background-color: #FB4141;
+  color: white;
+}
+
+/* Small animation for the arrow inside the button */
+.disclaimer-close-btn:hover .close-arrow {
+  transform: translateY(2px); 
+}
+.close-arrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
+/* UPDATE THIS EXISTING CLASS: Increase max-height */
+/* Your previous max-height: 500px was likely too small for the long text */
+.accordion-enter-active,
+.accordion-leave-active {
+  transition: all 0.5s ease-in-out;
+  max-height: 3000px; /* INCREASED to ensure all text fits */
+  opacity: 1;
 }
 </style>
